@@ -1,0 +1,26 @@
+{
+  "files": {
+    "TerminalManager/TerminalHandler.cpp": [
+      {
+        "id": "c8f818ee-363e-4878-990a-6951879d2115",
+        "line": 27,
+        "version": 1036,
+        "index": 1006
+      },
+      {
+        "id": "bfbfb70f-8d41-458e-8d00-d559d09db4e8",
+        "line": 195,
+        "version": 1036,
+        "index": 6651
+      }
+    ],
+    "projects_folder/Project1/metadata.txt": [
+      {
+        "id": "37ef8761-3dc1-4901-a3d6-456401518ba2",
+        "line": 2,
+        "version": 5,
+        "index": 48
+      }
+    ]
+  }
+}

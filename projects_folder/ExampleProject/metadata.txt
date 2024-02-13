@@ -1,0 +1,4 @@
+This is an example name
+example assignment type
+date completion example: 2024-##-##
+Description: Description exampler here.

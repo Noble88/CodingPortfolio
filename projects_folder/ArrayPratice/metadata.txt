@@ -1,0 +1,4 @@
+Array Practice
+Personal Code
+2024-02-05
+Description: Just some notes from in class lectures about arrays
