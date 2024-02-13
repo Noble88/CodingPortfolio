@@ -1,5 +1,7 @@
 # Welcome to my Coding Portfolio
 
+## Description
+
 - [How To Use, Build, & Run](#how-to-use-build--run)
   - [How to Use](#how-to-use)
   - [Other Notes](#other-notes)
@@ -36,6 +38,8 @@
   make
   ./main
 ```
+
+
 
 
 
