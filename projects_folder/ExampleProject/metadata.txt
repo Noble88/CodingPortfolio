@@ -1,4 +1,4 @@
 This is an example name
 example assignment type
-date completion example: 2024-##-##
+date completion example: ####-##-##
 Description: Description exampler here.

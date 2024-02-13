@@ -1,0 +1,4 @@
+Stack Practice (WIP)
+In Class Pratice
+0000-00-00
+Description: This code is centered around using the stack via methods, operations, and algorithms. INSERT REST OF DESCRIPTION
