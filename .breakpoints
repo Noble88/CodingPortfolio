@@ -3,15 +3,15 @@
     "TerminalManager/TerminalHandler.cpp": [
       {
         "id": "c8f818ee-363e-4878-990a-6951879d2115",
-        "line": 27,
-        "version": 1036,
-        "index": 1006
+        "line": 7,
+        "version": 2528,
+        "index": 244
       },
       {
         "id": "bfbfb70f-8d41-458e-8d00-d559d09db4e8",
-        "line": 195,
-        "version": 1036,
-        "index": 6651
+        "line": 7,
+        "version": 2528,
+        "index": 244
       }
     ],
     "projects_folder/GenStack/makefile": [

@@ -2,63 +2,193 @@
 #include <iostream>
 
 
-//TODO: There is layering, REDO HOW TERMINAL INTERACTIONS SO THAT WHEN QUITTING WONT GIVE "ERROR: Invalid Window State - attempted to enter state: N/A"
+// TODO: There is layering, REDO HOW TERMINAL INTERACTIONS SO THAT WHEN QUITTING
+// TODO: [Add debugger for this file]
+// WONT GIVE "ERROR: Invalid Window State - attempted to enter state: N/A"
 
-std::string windowState = "N/A"; // Can be: menu, projects, sorting options, help
-
-void TerminalHandler::GenericCommands(std::string userInput) {
-  if (userInput == "menu" || userInput == "main menu")
-    WindowSwitcher("menu");
-  else if (userInput == "view lecture" || userInput == "projects")
-    WindowSwitcher("projects");
-  else if (userInput == "sorting options" || userInput == "sorting" ||
-           userInput == "sort" || userInput == "filter")
-    WindowSwitcher("sorting options");
-  else if (userInput == "help")
-    WindowSwitcher("help");
-  else if (userInput == "quit" || userInput == "exit" || userInput == "q")
-    std::cout << "Exiting..." << std::endl;
-  else
-    std::cout << "Invalid Selection Type Help";
-  WindowSwitcher(windowState);
+TerminalHandler::TerminalHandler() {
+    currentState = WindowState::MENU;
+    // Initialize other member variables
 }
 
-//>Sorting Options< Display & Responce
-void TerminalHandler::DisplaySortingOptions() {
-  std::cout << "[SORTING OPTIONS} \n UNAVALIBLE FOR NOW!";
-  std::cout << "\nGeneral Command: ";
+//Input Helper Methods
+std::string TerminalHandler::CleanUserInput(string userInput) {
+  std::string cleanedInput;
+
+  // Connvert responce to lowercase
+  for (char c : userInput) {
+    if (std::isalnum(static_cast<unsigned char>(c))) {
+      cleanedInput += std::tolower(static_cast<unsigned char>(c));
+    }
+  }
+
+  // Trim leading and trailing whitespace
+  auto start = cleanedInput.find_first_not_of(" \t\n\r\f\v");
+  if (start != std::string::npos) {
+    auto end = cleanedInput.find_last_not_of(" \t\n\r\f\v");
+    cleanedInput = cleanedInput.substr(start, end - start + 1);
+  }
+  return cleanedInput;
 }
-void TerminalHandler::SortingOptionsSelectionResponce(std::string userInput) {
-  GenericCommands(userInput);
+string TerminalHandler::GetUserInput() {
+  std::string userInput;
+  std::cin >> userInput;
+  return CleanUserInput(userInput);
 }
+int TerminalHandler::GetNumberFromUserInput(string userInput) {
+    int selection = -1;
+    try {
+        selection = std::stoi(userInput); // Convert string to int
+    } catch (const std::invalid_argument &e) { //No number means 
+      GenericCommands(userInput); 
+      return -1;
+    }
+    return selection;
+}
+
 
 //>Menu< Display & Responce
 void TerminalHandler::DisplayMainMenu() {
-  std::cout
-      << "[MAIN MENU] \n1) View Projects \n2) Sorting Options (unavalible";
-  std::cout << "\nOption Number or General Command: ";
+  cout << "[MAIN MENU] \n"
+      << "1) View Projects \n"
+      << "2) Sorting Options (unavailable) \n"
+        << "Option Number or General Command: ";
 }
-void TerminalHandler::MainMenuSelectionResponce(std::string userInput) {
-  int selection = -1;
-  try {
-    selection = std::stoi(userInput); // Convert string to int
-  } catch (const std::invalid_argument &e) {
-    GenericCommands(userInput);
-  }
-  switch (selection) {
-  case 1:
-    WindowSwitcher("projects");
-    break;
-  case 2:
-    WindowSwitcher("sorting options");
-    break;
+void TerminalHandler::MainMenuSelectionResponse(int userInput){
+  switch (userInput){
+    case 1: currentState = WindowState::PROJECTS; break;
+    case 2: currentState = WindowState::SORTING_OPTIONS; break;
   }
 }
+
+
+//>Help< Display
+void TerminalHandler::DisplayHelp() {
+  cout << "[HELP]\n"
+    <<"General Commands: [help], [menu], [projects], [sorting options] [quit]\n"
+    <<"Prompt Help: your input will be cleane, so any white space, special symbol, or capatalization will be ignored\n"
+      << "Option Number or Command:";
+}
+void TerminalHandler::HelpSelectionResponse(int userInput){}
+
+
+//>Sorting Options< Display & Responce
+void TerminalHandler::DisplaySortingOptions() {
+  cout 
+    << "[SORTING OPTIONS}\n"
+    <<" UNAVALIBLE FOR NOW!\n"
+      << "General Command: ";
+}
+void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {}
+
 
 //>Project< Display & Responce
-void TerminalHandler::DisplayProjects() {
-  std::cout << "\n\n[PROJECTS]\n";
+  //File Managment & Data Creation
+const int MAX_PROJECTS = 100; // Maximum number of projects
+const int NUM_COLUMNS = 5;     // Number of columns
 
+std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
+
+vector<string> TerminalHandler::GetProjectData(const string& metadataFilePath) {
+    vector<string> projectData;
+    ifstream metadataFile(metadataFilePath);
+    string line;
+
+    // Initialize project data with empty strings
+    projectData.resize(NUM_COLUMNS);
+
+    // Read metadata file line by line
+    while (getline(metadataFile, line)) {
+        if (line.find("Project Name:") != string::npos) {
+            projectData[1] = line.substr(line.find(":") + 1);
+        } else if (line.find("Project Type:") != string::npos) {
+            projectData[2] = line.substr(line.find(":") + 1);
+        } else if (line.find("Completed Date:") != string::npos) {
+            projectData[3] = line.substr(line.find(":") + 1);
+        } else if (line.find("Description:") != string::npos) {
+            projectData[4] = line.substr(line.find(":") + 1);
+        }
+    }
+    metadataFile.close(); // Close the file
+
+    return projectData;
+}
+void TerminalHandler::CreateProjectDataBase(const string& projectsFolderPath) {
+    int projectCount = 0;
+
+    for (const auto& entry : fs::directory_iterator(projectsFolderPath)) {
+        if (entry.is_directory()) {
+            string projectFolder = entry.path().filename();
+            string metadataFilePath = entry.path() / "metadata.txt";
+
+            // Check if metadata.txt exists for this project
+            if (fs::exists(metadataFilePath)) {
+                // Extract project data
+                vector<string> projectData = GetProjectData(metadataFilePath);
+
+                // Assign project data to the project table
+                projectTable[projectCount][0] = projectFolder; // Exact File Name
+                projectTable[projectCount][1] = projectData[1]; // Project Name
+                projectTable[projectCount][2] = projectData[2]; // Project Type
+                projectTable[projectCount][3] = projectData[3]; // Completed Date
+                projectTable[projectCount][4] = projectData[4]; // Description
+
+                projectCount++;
+            }
+        }
+    }
+}
+void TerminalHandler::RunProject(int projectIndex) {
+  string executableName = projectTable[projectIndex][0] + "_Executable";
+  string projectFolderPath = "projects_folder/" + projectTable[projectIndex][0];
+  string fullPath = projectFolderPath + "/" + executableName;
+
+  if (fs::is_regular_file(fullPath)) {
+    int result = std::system(fullPath.c_str());
+
+    if (result != 0) {
+      cerr << "Error executing project: " << projectTable[projectIndex][1] << endl;
+    }
+  } else {
+      cout << "Executable not found: " << projectTable[projectIndex][1] << endl;
+  }
+}
+
+//Basic Stuff
+void TerminalHandler::DisplayProjects() {
+  cout << "\n\n[PROJECTS]\n";
+  
+  for (int i = 0; i < MAX_PROJECTS; ++i) {
+    if (projectTable[i][0].empty()) {
+        break; // Stop if we reach an empty row
+    }
+    cout << i + 1 << ") " 
+      << projectTable[i][1] << " | " //"Project Name
+      << projectTable[i][2]  << " | " //"Project Type
+      << projectTable[i][3] << " | \n"; // Completed Date
+  }
+  
+  if(false){//Display All Data
+    for (int i = 0; i < MAX_PROJECTS; ++i) {
+        if (projectTable[i][0].empty()) {
+            break; // Stop if we reach an empty row
+        }
+
+        // Print project data
+        cout << "Project " << (i + 1) << ":" << endl;
+        cout << "Exact File Name: " << projectTable[i][0] << endl;
+        cout << "Project Name: " << projectTable[i][1] << endl;
+        cout << "Project Type: " << projectTable[i][2] << endl;
+        cout << "Completed Date: " << projectTable[i][3] << endl;
+        cout << "Description: " << projectTable[i][4] << endl;
+        cout << endl;
+    }
+  }
+
+
+  
+  
+/*
   // Assuming all project folders are directly under the projects_folder
   std::string projectsFolderPath =
       "/home/runner/CodingPortfolio/projects_folder";
@@ -141,9 +271,9 @@ void TerminalHandler::DisplayProjects() {
         std::string optionInput = GetUserInput();
         if (optionInput == "1") {
           subSelection = false;
-          std::cout << "\n-----[Running Code...]-----\n";
+          
           ProjectSelectionResponse(selectedProjectName);
-          std::cout << "\n-----[End Code...]-----\n";
+
           break;
         } else if (optionInput == "2") {
           // Display the stored description for the selected project
@@ -163,99 +293,95 @@ void TerminalHandler::DisplayProjects() {
     // User didn't enter a valid number, fall back to generic commands
     GenericCommands(userInput);
   }
+  */
 }
-void TerminalHandler::ProjectSelectionResponse(const std::string &userInput) {
-  // Check if userInput is a valid project name
-  std::string projectsFolderPath =
-      "/home/runner/CodingPortfolio/projects_folder";
+void TerminalHandler::ProjectSelectionResponse(int userInput) {
+  bool isInSubMenu = true;
+  while(isInSubMenu){
+    cout << "\n[Selected Project: " << projectTable[userInput][1] << "]" << endl; 
 
-  // Check if the user input corresponds to a project folder
-  std::string projectFolderPath = projectsFolderPath + "/" + userInput;
+    // Display project menu options
+    cout << "Project Menu:" << endl;
+    cout << "1) Run Project" << endl;
+    cout << "2) See Description" << endl;
+    cout << "3) Back" << endl;
 
-  // Construct the correct executable name based on the folder name
-  std::string executableName = userInput + "_Executable";
+    // Get user input
+    int choice;
+    cout << "Enter your choice: ";
+    cin >> choice;
 
-  // Construct the full path to the executable
-  std::string fullPath = projectFolderPath + "/" + executableName;
+    // Process user's choice
 
-  if (std::filesystem::is_regular_file(fullPath)) {
-    // Use fullPath to execute the project
-    int result = std::system(fullPath.c_str());
-
-    // Check the result for any errors
-    if (result != 0) {
-      std::cerr << "Error executing project: " << userInput << std::endl;
-    }
-  } else {
-    std::cout << "Executable not found: " << userInput << std::endl;
-  }
-}
-
-// MISC
-void TerminalHandler::DisplayHelp() {
-  std::cout << "[HELP]\nGeneral Commands: [help], [menu], [projects], [sorting options] [quit]\nPrompt Help: your input will be cleane, so any white space, special symbol, or capatalization will be ignored";
-  std::cout << "\nOption Number or Command:";
-}
-
-std::string TerminalHandler::CleanUserInput(std::string userInput) {
-  std::string cleanedInput;
-
-  // Connvert responce to lowercase
-  for (char c : userInput) {
-    if (std::isalnum(static_cast<unsigned char>(c))) {
-      cleanedInput += std::tolower(static_cast<unsigned char>(c));
+    switch (choice) {
+      case 1:
+        std::cout << "\n-----[Running Code...]-----\n";
+        RunProject(userInput); 
+        std::cout << "\n-----[End Code...]-----\n";
+        isInSubMenu = false; break;
+        break;
+      case 2:
+        cout << projectTable[userInput][4] << endl; break;
+      case 3: isInSubMenu = false; break;
+      default:
+          cout << "Invalid choice! Please try again." << endl;
+          break;
     }
   }
 
-  // Trim leading and trailing whitespace
-  auto start = cleanedInput.find_first_not_of(" \t\n\r\f\v");
-  if (start != std::string::npos) {
-    auto end = cleanedInput.find_last_not_of(" \t\n\r\f\v");
-    cleanedInput = cleanedInput.substr(start, end - start + 1);
-  }
-  return cleanedInput;
+
 }
 
-std::string TerminalHandler::GetUserInput() {
-  std::string userInput;
-  std::cin >> userInput;
-  return CleanUserInput(userInput);
+
+//Input To Action Methods
+void TerminalHandler::GenericCommands(string userInput) {
+  if (userInput == "menu" || userInput == "main menu")
+    currentState = WindowState::MENU;
+  else if (userInput == "project" || userInput == "projects")
+    currentState = WindowState::PROJECTS;
+  else if (userInput == "sorting options" || userInput == "sorting" ||
+           userInput == "sort" || userInput == "filter")
+    currentState = WindowState::SORTING_OPTIONS;
+  else if (userInput == "help")
+    currentState = WindowState::HELP;
+  else if (userInput == "quit" || userInput == "exit" || userInput == "q")
+    currentState = WindowState::QUIT;
+  else
+    std::cout << "Invalid Selection - Type Help for Commands & Command Formatting";
 }
-
-void TerminalHandler::WindowSwitcher(std::string windowState) {
-  std::cout << "\n\n";
-  std::string userInput;
-  if (windowState == "menu") {
-    std::string windowState = "menu";
-    DisplayMainMenu();
-    userInput = GetUserInput();
-    MainMenuSelectionResponce(userInput);
-
-  } else if (windowState == "projects") {
-    std::string windowState = "projects";
-    DisplayProjects();
+void TerminalHandler::HandleInput(string userInput) {
+  switch (currentState) {
+      case WindowState::MENU: 
+        MainMenuSelectionResponse(GetNumberFromUserInput(userInput)); break;
+      case WindowState::PROJECTS: 
+        ProjectSelectionResponse(GetNumberFromUserInput(userInput)); break;
+      case WindowState::SORTING_OPTIONS:
+        SortingOptionsSelectionResponse(GetNumberFromUserInput(userInput));break;
+      case WindowState::HELP: 
+        HelpSelectionResponse(GetNumberFromUserInput(userInput)); break;
+      case WindowState::QUIT:
+        /*Main loop checks currentState == quit & leaves loop so no code needed*/ break;
   }
-
-  else if (windowState == "sorting options") {
-    std::string windowState = "sorting options";
-    DisplaySortingOptions();
-    userInput = GetUserInput();
-    SortingOptionsSelectionResponce(userInput);
-
-  } else if (windowState == "help") {
-    std::string windowState = "help";
-    DisplayHelp();
-    userInput = GetUserInput();
-    GenericCommands(userInput);
-  } else
-    std::cout << "ERROR: Invalid Window State - attempted to enter state: " +
-                     windowState;
-  ;
-  std::cout << "\n\n";
 }
 
 void TerminalHandler::Run() {
-  std::cout << "WELCOME TO MY C++ PORTFOLIO\nPlease type the command \"help\" "
-               "for any assistence.";
-  WindowSwitcher("menu");
+
+//Inital Text and Process
+  cout 
+    << "WELCOME TO MY C++ PORTFOLIO\n"
+    << "Please type the command \"help\" for any assistence.";
+  currentState = WindowState::MENU;
+  CreateProjectDataBase("projects_folder");
+  
+  while (currentState != WindowState::QUIT) {
+    switch (currentState) {
+      case WindowState::MENU: DisplayMainMenu(); break;
+      case WindowState::PROJECTS: DisplayProjects(); break;
+      case WindowState::SORTING_OPTIONS: DisplaySortingOptions(); break;
+      case WindowState::HELP: DisplayHelp(); break;
+      default:  break;
+    }
+
+    HandleInput(GetUserInput());
+  }
 }

@@ -9,31 +9,55 @@
 #include <experimental/filesystem>
 #include <cstdlib>
 
+using namespace std;
+namespace fs = std::filesystem;
+
+// Define enum for window states
+enum class WindowState { MENU, PROJECTS, SORTING_OPTIONS, HELP, QUIT };
+
 class TerminalHandler {
+  private:
+    WindowState currentState;
+    // Other member variables as needed
 
 public:
-  TerminalHandler(){}
+  TerminalHandler();
 
-  void Run();
+//Input Helper Methods
+  string GetUserInput();
+  string CleanUserInput(string userInput);
+  int GetNumberFromUserInput(string userInput);
+
+
+//Menu is the first thing displayed
   void DisplayMainMenu();
-  void DisplayProjects();
-  void DisplayHelp(); //Used to give the user list of commands and other aid
+  void MainMenuSelectionResponse(int userInput);
+
+
+//Help Window State: Give the user list of commands and other aid 
+  void DisplayHelp(); 
+  void HelpSelectionResponse(int userInput);
+
+
+//Sorting Options will effect how the projects a displayed (by date, name, etc)
   void DisplaySortingOptions();
+  void SortingOptionsSelectionResponse(int userInput);
 
-  void InteractionFlow();
-  void GenericCommands(std::string userInput); //This is present in every "Selection Responce" and can go through the different windows 
-  void MainMenuSelectionResponce(std::string userInput);
-  void ProjectSelectionResponse(const std::string& userInput); 
-//void LectureSelectionResponce(std::string userInput);
-  //void ContentSelectionResponce(int lectureNum, std::string userInput);
-  void HelpSelectionResponce(std::string userInput);
-  void SortingOptionsSelectionResponce(std::string userInput);
 
-  void WindowSwitcher(std::string windowState); //Will switch the states the user can go through and returns the state the user is in
+//Projects Window State: Displays the projects in the "projects_folder" folder
+  vector<string> GetProjectData(const string& metadataFilePath);
+  void CreateProjectDataBase(const string& projectsFolderPath);
+  void RunProject(int projectIndex);
 
-  std::string CleanUserInput(std::string userInput);
-  std::string GetUserInput();
-  // ADD OTHER METHODS HERE
+  void DisplayProjects();
+  void ProjectSelectionResponse(int userInput); 
+
+
+//Input To Action Methods
+  void GenericCommands(string userInput); //This is present in every "Selection Response" and can go through the different windows
+  void HandleInput(string userInput);
+  void Run();
+
 };
 
 #endif // TERMINALHANDLER_H

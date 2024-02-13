@@ -1,4 +1,4 @@
-Text Analyzer
-In Class Pratice
-2024-01-31
-Description: Little warm up excerizse to gauge C++ knowledge and familarity within 15 to 20 minutes
+Project Name: Text Analyzer
+Project Type: In Class Pratice
+Completed Date: 2024-01-31
+Description: Description: Little warm up excerizse to gauge C++ knowledge and familarity within 15 to 20 minutes
