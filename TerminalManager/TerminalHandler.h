@@ -13,7 +13,7 @@ using namespace std;
 namespace fs = std::filesystem;
 
 // Define enum for window states
-enum class WindowState { MENU, PROJECTS, SORTING_OPTIONS, HELP, QUIT };
+enum class WindowState { MENU, PROJECTS, SORTING_OPTIONS, VIEW_OPTIONS, HELP, QUIT };
 
 class TerminalHandler {
   private:
@@ -43,6 +43,9 @@ public:
   void DisplaySortingOptions();
   void SortingOptionsSelectionResponse(int userInput);
 
+//Sorting Options will effect how the projects a displayed (by date, name, etc)
+  void DisplayViewOptions();
+  void ViewOptionsSelectionResponse(int userInput);
 
 //Projects Window State: Displays the projects in the "projects_folder" folder
   vector<string> GetProjectData(const string& metadataFilePath);

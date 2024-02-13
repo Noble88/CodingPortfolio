@@ -11,6 +11,14 @@ TerminalHandler::TerminalHandler() {
     // Initialize other member variables
 }
 
+const int MAX_PROJECTS = 100; // Maximum number of projects
+const int NUM_COLUMNS = 5;     // Number of columns
+
+std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
+string projectDisplayFormat; // [minimal], [show all]
+
+
+
 //Input Helper Methods
 std::string TerminalHandler::CleanUserInput(string userInput) {
   std::string cleanedInput;
@@ -40,7 +48,7 @@ int TerminalHandler::GetNumberFromUserInput(string userInput) {
     try {
         selection = std::stoi(userInput); // Convert string to int
     } catch (const std::invalid_argument &e) { //No number means 
-      GenericCommands(userInput); 
+      GenericCommands(userInput);
       return -1;
     }
     return selection;
@@ -52,12 +60,14 @@ void TerminalHandler::DisplayMainMenu() {
   cout << "[MAIN MENU] \n"
       << "1) View Projects \n"
       << "2) Sorting Options (unavailable) \n"
+      << "3) Project Viewing Options\n"
         << "Option Number or General Command: ";
 }
 void TerminalHandler::MainMenuSelectionResponse(int userInput){
   switch (userInput){
     case 1: currentState = WindowState::PROJECTS; break;
     case 2: currentState = WindowState::SORTING_OPTIONS; break;
+    case 3: currentState = WindowState::VIEW_OPTIONS; break;
   }
 }
 
@@ -65,7 +75,7 @@ void TerminalHandler::MainMenuSelectionResponse(int userInput){
 //>Help< Display
 void TerminalHandler::DisplayHelp() {
   cout << "[HELP]\n"
-    <<"General Commands: [help], [menu], [projects], [sorting options] [quit]\n"
+    <<"General Commands: [help], [menu], [projects], [sorting options] [view options] [quit]\n"
     <<"Prompt Help: your input will be cleane, so any white space, special symbol, or capatalization will be ignored\n"
       << "Option Number or Command:";
 }
@@ -81,14 +91,23 @@ void TerminalHandler::DisplaySortingOptions() {
 }
 void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {}
 
+//>ViewOptions< Display & Responce
+void TerminalHandler::DisplayViewOptions(){
+  cout << "[VIEWING OPTIONS] \n"
+    << "Current Setting: "<< projectDisplayFormat <<"\n"
+    << "1) Minimal View \n"
+    << "2) Show All Info \n"
+      << "Option Number or General Command: ";
+}
+void TerminalHandler::ViewOptionsSelectionResponse(int userInput){
+  switch (userInput){
+    case 1: projectDisplayFormat= "minimal"; break;
+    case 2: projectDisplayFormat="show all"; break;
+  }
+}
 
 //>Project< Display & Responce
   //File Managment & Data Creation
-const int MAX_PROJECTS = 100; // Maximum number of projects
-const int NUM_COLUMNS = 5;     // Number of columns
-
-std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
-
 vector<string> TerminalHandler::GetProjectData(const string& metadataFilePath) {
     vector<string> projectData;
     ifstream metadataFile(metadataFilePath);
@@ -156,19 +175,19 @@ void TerminalHandler::RunProject(int projectIndex) {
 
 //Basic Stuff
 void TerminalHandler::DisplayProjects() {
-  cout << "\n\n[PROJECTS]\n";
-  
-  for (int i = 0; i < MAX_PROJECTS; ++i) {
-    if (projectTable[i][0].empty()) {
-        break; // Stop if we reach an empty row
+  cout << "\n\n[PROJECTS - View: "<< projectDisplayFormat <<"]\n";
+  if(projectDisplayFormat=="minimal"){
+    for (int i = 0; i < MAX_PROJECTS; ++i) {
+      if (projectTable[i][0].empty()) {
+          break; // Stop if we reach an empty row
+      }
+      cout << i + 1 << ") " 
+        << projectTable[i][1] << " | " //"Project Name
+        << projectTable[i][2]  << " | " //"Project Type
+        << projectTable[i][3] << " | \n"; // Completed Date
     }
-    cout << i + 1 << ") " 
-      << projectTable[i][1] << " | " //"Project Name
-      << projectTable[i][2]  << " | " //"Project Type
-      << projectTable[i][3] << " | \n"; // Completed Date
   }
-  
-  if(false){//Display All Data
+  if(projectDisplayFormat=="show all"){
     for (int i = 0; i < MAX_PROJECTS; ++i) {
         if (projectTable[i][0].empty()) {
             break; // Stop if we reach an empty row
@@ -176,124 +195,15 @@ void TerminalHandler::DisplayProjects() {
 
         // Print project data
         cout << "Project " << (i + 1) << ":" << endl;
-        cout << "Exact File Name: " << projectTable[i][0] << endl;
-        cout << "Project Name: " << projectTable[i][1] << endl;
-        cout << "Project Type: " << projectTable[i][2] << endl;
-        cout << "Completed Date: " << projectTable[i][3] << endl;
-        cout << "Description: " << projectTable[i][4] << endl;
+        cout << "Exact Folder Name: " << projectTable[i][0] << endl;
+        cout << "Project Name:      " << projectTable[i][1] << endl;
+        cout << "Project Type:      " << projectTable[i][2] << endl;
+        cout << "Completed Date:    " << projectTable[i][3] << endl;
+        cout << "Description:       " << projectTable[i][4] << endl;
         cout << endl;
     }
   }
-
-
-  
-  
-/*
-  // Assuming all project folders are directly under the projects_folder
-  std::string projectsFolderPath =
-      "/home/runner/CodingPortfolio/projects_folder";
-
-  std::vector<std::string> projectNames; // Store project names for selection
-  std::vector<std::string> projectDescriptions; // Store project descriptions
-
-  // Iterate through the project folders
-  int projectCount = 0;
-  for (const auto &entry :
-       std::filesystem::directory_iterator(projectsFolderPath)) {
-    if (entry.is_directory()) {
-      std::string projectFolder = entry.path().filename();
-      std::string metadataFilePath = entry.path() / "metadata.txt";
-
-      // Check if metadata.txt exists for this project
-      if (std::filesystem::exists(metadataFilePath)) {
-        // Read and display the content of metadata.txt
-        std::ifstream metadataFile(metadataFilePath);
-        std::string line;
-
-        std::string metadataString; // To store all components on one line
-        std::string description;    // To store the description
-
-        while (std::getline(metadataFile, line)) {
-          if (line.find("Description:") != std::string::npos) {
-            description = line.substr(line.find(":") + 1);
-          } else {
-            metadataString += line + " | ";
-          }
-        }
-
-        // Remove the trailing " | "
-        if (!metadataString.empty()) {
-          metadataString =
-              metadataString.substr(0, metadataString.length() - 3);
-        }
-
-        // Display the components
-        std::cout << ++projectCount << ") " << metadataString << std::endl;
-
-        // Store the description
-        projectDescriptions.push_back(description);
-
-        metadataFile.close();
-      } else {
-        std::cout << ++projectCount << ") " << projectFolder
-                  << " | Metadata not found" << std::endl;
-
-        // Store an empty description for projects without metadata
-        projectDescriptions.push_back("");
-      }
-
-      projectNames.push_back(projectFolder);
-    }
-  }
-
-  std::cout
-      << "\nSelect a project by entering its number or type a General Command:";
-
-  std::string userInput;
-  userInput = GetUserInput(); // This cleans user input
-
-  int selectedProjectIndex = -1;
-
-  try {
-    selectedProjectIndex = std::stoi(userInput);
-
-    if (selectedProjectIndex >= 1 && selectedProjectIndex <= projectCount) {
-
-      // User selected a project by number
-      std::string selectedProjectName = projectNames[selectedProjectIndex - 1];
-      bool subSelection = true;
-      while (subSelection) {
-        std::cout << "\n[" << selectedProjectName << "]\n";
-        std::cout << "1) Run Project\n";
-        std::cout << "2) See Description\n";
-        std::cout << "3) Back\n";
-        std::cout << "Select an Option: ";
-        std::string optionInput = GetUserInput();
-        if (optionInput == "1") {
-          subSelection = false;
-          
-          ProjectSelectionResponse(selectedProjectName);
-
-          break;
-        } else if (optionInput == "2") {
-          // Display the stored description for the selected project
-          std::cout << "Description: "
-                    << projectDescriptions[selectedProjectIndex - 1] << "\n";
-        } else if (optionInput == "3") {
-          DisplayProjects();
-          break;
-        }
-      }
-      WindowSwitcher("projects");
-    } else {
-      // Invalid project number, fall back to generic commands
-      GenericCommands(userInput);
-    }
-  } catch (const std::invalid_argument &e) {
-    // User didn't enter a valid number, fall back to generic commands
-    GenericCommands(userInput);
-  }
-  */
+  cout << "Enter a number or General Command: ";
 }
 void TerminalHandler::ProjectSelectionResponse(int userInput) {
   bool isInSubMenu = true;
@@ -346,21 +256,27 @@ void TerminalHandler::GenericCommands(string userInput) {
     currentState = WindowState::HELP;
   else if (userInput == "quit" || userInput == "exit" || userInput == "q")
     currentState = WindowState::QUIT;
+  else if (userInput == "view options" || userInput == "view")
+    currentState = WindowState::VIEW_OPTIONS;
   else
     std::cout << "Invalid Selection - Type Help for Commands & Command Formatting";
 }
 void TerminalHandler::HandleInput(string userInput) {
-  switch (currentState) {
-      case WindowState::MENU: 
-        MainMenuSelectionResponse(GetNumberFromUserInput(userInput)); break;
-      case WindowState::PROJECTS: 
-        ProjectSelectionResponse(GetNumberFromUserInput(userInput)); break;
-      case WindowState::SORTING_OPTIONS:
-        SortingOptionsSelectionResponse(GetNumberFromUserInput(userInput));break;
-      case WindowState::HELP: 
-        HelpSelectionResponse(GetNumberFromUserInput(userInput)); break;
-      case WindowState::QUIT:
-        /*Main loop checks currentState == quit & leaves loop so no code needed*/ break;
+  if(GetNumberFromUserInput(userInput)!=-1){
+    switch (currentState) {
+        case WindowState::MENU: 
+          MainMenuSelectionResponse(GetNumberFromUserInput(userInput)); break;
+        case WindowState::PROJECTS: 
+          ProjectSelectionResponse(GetNumberFromUserInput(userInput)); break;
+        case WindowState::SORTING_OPTIONS:
+          SortingOptionsSelectionResponse(GetNumberFromUserInput(userInput));break;
+        case WindowState::HELP: 
+          HelpSelectionResponse(GetNumberFromUserInput(userInput)); break;
+        case WindowState::VIEW_OPTIONS: 
+          ViewOptionsSelectionResponse(GetNumberFromUserInput(userInput)); break;
+        case WindowState::QUIT:
+          /*Main loop checks currentState == quit & leaves loop so no code needed*/ break;
+    }
   }
 }
 
@@ -370,18 +286,22 @@ void TerminalHandler::Run() {
   cout 
     << "WELCOME TO MY C++ PORTFOLIO\n"
     << "Please type the command \"help\" for any assistence.";
+  
   currentState = WindowState::MENU;
   CreateProjectDataBase("projects_folder");
+  projectDisplayFormat = "minimal";
   
   while (currentState != WindowState::QUIT) {
+
     switch (currentState) {
       case WindowState::MENU: DisplayMainMenu(); break;
       case WindowState::PROJECTS: DisplayProjects(); break;
       case WindowState::SORTING_OPTIONS: DisplaySortingOptions(); break;
+      case WindowState::VIEW_OPTIONS: DisplayViewOptions(); break;
       case WindowState::HELP: DisplayHelp(); break;
       default:  break;
     }
-
     HandleInput(GetUserInput());
+    cout <<"\n";
   }
 }
