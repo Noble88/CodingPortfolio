@@ -3,8 +3,13 @@
 #include <string>
 #include "TerminalManager/TerminalHandler.h"
 
+#include "Resources/Debugger/Debugger.h"
+
 int main() {
-  std::cout << "RUNNING PROJECT MANAGER MAIN" << std::endl;
+  Debugger::enableCategory("Main Method");
+  Debugger::enableCategory("TERMINNAL_HANDLER");
+  DEBUG_MSG("RUNNING PROJECT MANAGER MAIN\n");
+
   TerminalHandler terminalHandler;
   terminalHandler.Run();
   return 0;

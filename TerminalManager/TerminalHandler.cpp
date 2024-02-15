@@ -1,4 +1,5 @@
 #include "TerminalHandler.h"
+#include "../Resources/Debugger/Debugger.h"
 #include <iostream>
 
 
@@ -139,29 +140,29 @@ vector<string> TerminalHandler::GetProjectData(const string& metadataFilePath) {
     return projectData;
 }
 void TerminalHandler::CreateProjectDataBase(const string& projectsFolderPath) {
-    int projectCount = 0;
+  DEBUG_METHOD("CreateProjectDataBase","Creating Database of Projects");
+  int projectCount = 0;
+  for (const auto& entry : fs::directory_iterator(projectsFolderPath)) {
+    if (entry.is_directory()) {
+      string projectFolder = entry.path().filename();
+      string metadataFilePath = entry.path() / "metadata.txt";
 
-    for (const auto& entry : fs::directory_iterator(projectsFolderPath)) {
-        if (entry.is_directory()) {
-            string projectFolder = entry.path().filename();
-            string metadataFilePath = entry.path() / "metadata.txt";
+      // Check if metadata.txt exists for this project
+      if (fs::exists(metadataFilePath)) {
+        // Extract project data
+        vector<string> projectData = GetProjectData(metadataFilePath);
 
-            // Check if metadata.txt exists for this project
-            if (fs::exists(metadataFilePath)) {
-                // Extract project data
-                vector<string> projectData = GetProjectData(metadataFilePath);
+        // Assign project data to the project table
+        projectTable[projectCount][0] = projectFolder; // Exact File Name
+        projectTable[projectCount][1] = projectData[1]; // Project Name
+        projectTable[projectCount][2] = projectData[2]; // Project Type
+        projectTable[projectCount][3] = projectData[3]; // Completed Date
+        projectTable[projectCount][4] = projectData[4]; // Description
 
-                // Assign project data to the project table
-                projectTable[projectCount][0] = projectFolder; // Exact File Name
-                projectTable[projectCount][1] = projectData[1]; // Project Name
-                projectTable[projectCount][2] = projectData[2]; // Project Type
-                projectTable[projectCount][3] = projectData[3]; // Completed Date
-                projectTable[projectCount][4] = projectData[4]; // Description
-
-                projectCount++;
-            }
-        }
+        projectCount++;
+      }
     }
+  }
 }
 void TerminalHandler::RunProject(int projectIndex) {
   string executableName = projectTable[projectIndex][0] + "_Executable";
@@ -260,6 +261,7 @@ void TerminalHandler::BuildExecutables(){
         std::cerr << "Error: Build failed" << std::endl;
     }
   }
+  CreateProjectDataBase("projects_folder");
   cout <<"\n";
 }
 

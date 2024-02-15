@@ -1,16 +1,21 @@
+#include "Debugger.h"
 
+std::unordered_set<std::string> Debugger::enabledCategories;
+std::mutex Debugger::mutex;
 
-/*
-Debugging method
-
-void DebugFormatting(std::string methodName, std::string debugMessage){//GEneric Method
-  if(debugCode){
-    std::cout << "DEBUG | Method: "+methodName+" | Message: "+debugMessage << std::endl;
-  }
+void Debugger::enableCategory(const std::string& category) {
+    std::lock_guard<std::mutex> lock(mutex);
+    enabledCategories.insert(category);
 }
-void DebugFormatting(std::string methodName, std::string testingVar, std::string description){//Testing for Variables
-  if(debugCode){
-    std::cout << "DEBUG | Method: "+methodName+" | Var: "+testingVar+" | Message: "+description << std::endl;
-  }
+
+void Debugger::disableCategory(const std::string& category) {
+    std::lock_guard<std::mutex> lock(mutex);
+    enabledCategories.erase(category);
 }
-*/
+
+void Debugger::debugMsg(const std::string& category, const std::string& fileLocation, const std::string& message) {
+    std::lock_guard<std::mutex> lock(mutex);
+    if (enabledCategories.find(category) != enabledCategories.end()) {
+        std::cout << "[DEBUG - " << fileLocation << " - " << category << "]: " << message << std::endl;
+    }
+}
