@@ -23,10 +23,14 @@ string projectDisplayFormat; // [minimal], [show all]
 std::string TerminalHandler::CleanUserInput(string userInput) {
   std::string cleanedInput;
 
-  // Connvert responce to lowercase
+  // Connvert responce to lowercase & Check Character Limit
   for (char c : userInput) {
     if (std::isalnum(static_cast<unsigned char>(c))) {
       cleanedInput += std::tolower(static_cast<unsigned char>(c));
+      if (cleanedInput.length() == 100) {//TODO: This is hardcoded!!! Make a system where user or debugger sets this value
+        cout << "Input is over the character limit! Please limiti responces to less than 150 characters";
+        break; // Stop processing if the maximum length is reached
+      }
     }
   }
 
@@ -36,6 +40,7 @@ std::string TerminalHandler::CleanUserInput(string userInput) {
     auto end = cleanedInput.find_last_not_of(" \t\n\r\f\v");
     cleanedInput = cleanedInput.substr(start, end - start + 1);
   }
+  
   return cleanedInput;
 }
 string TerminalHandler::GetUserInput() {
