@@ -55,6 +55,8 @@ public:
   void DisplayProjects();
   void ProjectSelectionResponse(int userInput); 
 
+//Building Executables
+  void BuildExecutables();
 
 //Input To Action Methods
   void GenericCommands(string userInput); //This is present in every "Selection Response" and can go through the different windows

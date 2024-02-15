@@ -58,8 +58,9 @@ int TerminalHandler::GetNumberFromUserInput(string userInput) {
 void TerminalHandler::DisplayMainMenu() {
   cout << "[MAIN MENU] \n"
       << "1) View Projects \n"
-      << "2) Sorting Options (unavailable) \n"
+      << "2) Sorting Options\n"
       << "3) Project Viewing Options\n"
+      << "4) Build All Executables\n"
         << "Option Number or General Command: ";
 }
 void TerminalHandler::MainMenuSelectionResponse(int userInput){
@@ -67,6 +68,7 @@ void TerminalHandler::MainMenuSelectionResponse(int userInput){
     case 1: currentState = WindowState::PROJECTS; break;
     case 2: currentState = WindowState::SORTING_OPTIONS; break;
     case 3: currentState = WindowState::VIEW_OPTIONS; break;
+    case 4: BuildExecutables(); break;
   }
 }
 
@@ -74,7 +76,7 @@ void TerminalHandler::MainMenuSelectionResponse(int userInput){
 //>Help< Display
 void TerminalHandler::DisplayHelp() {
   cout << "[HELP]\n"
-    <<"General Commands: [help], [menu], [projects], [sorting options] [view options] [quit]\n"
+    <<"General Commands: [help], [menu], [projects], [sorting options] [view options] [build] [quit]\n"
     <<"Prompt Help: your input will be cleane, so any white space, special symbol, or capatalization will be ignored\n"
       << "Option Number or Command:";
 }
@@ -105,8 +107,8 @@ void TerminalHandler::ViewOptionsSelectionResponse(int userInput){
   }
 }
 
-//>Project< Display & Responce
-  //File Managment & Data Creation
+//>Project< Display & Responce & Data Creation
+  //Data Creation
 vector<string> TerminalHandler::GetProjectData(const string& metadataFilePath) {
     vector<string> projectData;
     ifstream metadataFile(metadataFilePath);
@@ -160,7 +162,6 @@ void TerminalHandler::RunProject(int projectIndex) {
   string executableName = projectTable[projectIndex][0] + "_Executable";
   string projectFolderPath = "projects_folder/" + projectTable[projectIndex][0];
   string fullPath = projectFolderPath + "/" + executableName;
-  cout << "DEBUG: Running executable: "<< executableName << " | In file path: "<<projectFolderPath<< " | Full Path = " << fullPath << endl;
   
   if (fs::is_regular_file(fullPath)) {
     int result = std::system(fullPath.c_str());
@@ -173,7 +174,7 @@ void TerminalHandler::RunProject(int projectIndex) {
   }
 }
 
-//Basic Stuff
+  //Display & Responce
 void TerminalHandler::DisplayProjects() {
   cout << "\n\n[PROJECTS - View: "<< projectDisplayFormat <<"]\n";
   if(projectDisplayFormat=="minimal"){
@@ -239,6 +240,23 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
   }
 }
 
+//Building Executables
+#include <cstdlib> // For system function
+void TerminalHandler::BuildExecutables(){
+  cout <<"\nAre you sure you want to build executables in all projects? (y/n): ";
+  if(GetUserInput()[0] == 'y'){
+    const char* command = "./build_projects.sh"; // Assuming build_projects.sh is in the current directory
+
+    int result = std::system(command); // Run the shell script
+
+    if (result == 0) { // Check the result of the command
+        std::cout << "Build completed successfully" << std::endl;
+    } else {
+        std::cerr << "Error: Build failed" << std::endl;
+    }
+  }
+  cout <<"\n";
+}
 
 //Input To Action Methods
 void TerminalHandler::GenericCommands(string userInput) {
@@ -255,6 +273,8 @@ void TerminalHandler::GenericCommands(string userInput) {
     currentState = WindowState::QUIT;
   else if (userInput == "view options" || userInput == "view")
     currentState = WindowState::VIEW_OPTIONS;
+  else if (userInput == "build" || userInput == "build executables")
+    BuildExecutables();
   else
     std::cout << "Invalid Selection - Type Help for Commands & Command Formatting";
 }
@@ -283,7 +303,7 @@ void TerminalHandler::Run() {
 //Inital Text and Process
   cout 
     << "WELCOME TO MY C++ PORTFOLIO\n"
-    << "Please type the command \"help\" for any assistence.";
+    << "Please type the command \"help\" for any assistence.\n";
   
   currentState = WindowState::MENU;
   CreateProjectDataBase("projects_folder");
