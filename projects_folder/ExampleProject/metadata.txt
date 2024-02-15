@@ -1,4 +1,4 @@
-Project Name: This is an example name
-Project Type: example assignment type
-Completed Date: ####-##-##
-Description: Description exampler here.
+Project Name: Example name
+Project Type: Example assignment type
+Completed Date: 0000-00-00
+Description: Description example here.

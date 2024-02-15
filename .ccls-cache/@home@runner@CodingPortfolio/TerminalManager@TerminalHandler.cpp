@@ -48,7 +48,6 @@ int TerminalHandler::GetNumberFromUserInput(string userInput) {
     try {
         selection = std::stoi(userInput); // Convert string to int
     } catch (const std::invalid_argument &e) { //No number means 
-      GenericCommands(userInput);
       return -1;
     }
     return selection;
@@ -161,7 +160,8 @@ void TerminalHandler::RunProject(int projectIndex) {
   string executableName = projectTable[projectIndex][0] + "_Executable";
   string projectFolderPath = "projects_folder/" + projectTable[projectIndex][0];
   string fullPath = projectFolderPath + "/" + executableName;
-
+  cout << "DEBUG: Running executable: "<< executableName << " | In file path: "<<projectFolderPath<< " | Full Path = " << fullPath << endl;
+  
   if (fs::is_regular_file(fullPath)) {
     int result = std::system(fullPath.c_str());
 
@@ -182,7 +182,7 @@ void TerminalHandler::DisplayProjects() {
           break; // Stop if we reach an empty row
       }
       cout << i + 1 << ") " 
-        << projectTable[i][1] << " | " //"Project Name
+        << projectTable[i][1] << "| " //"Project Name
         << projectTable[i][2]  << " | " //"Project Type
         << projectTable[i][3] << " | \n"; // Completed Date
     }
@@ -208,10 +208,9 @@ void TerminalHandler::DisplayProjects() {
 void TerminalHandler::ProjectSelectionResponse(int userInput) {
   bool isInSubMenu = true;
   while(isInSubMenu){
-    cout << "\n[Selected Project: " << projectTable[userInput][1] << "]" << endl; 
+    cout << "\n[Selected Project: " << projectTable[(userInput-1)][1] << "]" << endl; 
 
     // Display project menu options
-    cout << "Project Menu:" << endl;
     cout << "1) Run Project" << endl;
     cout << "2) See Description" << endl;
     cout << "3) Back" << endl;
@@ -225,21 +224,19 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
 
     switch (choice) {
       case 1:
-        std::cout << "\n-----[Running Code...]-----\n";
-        RunProject(userInput); 
+        std::cout << "\n-----[Running Code...]-----\n\n";
+        RunProject((userInput-1)); 
         std::cout << "\n-----[End Code...]-----\n";
         isInSubMenu = false; break;
         break;
       case 2:
-        cout << projectTable[userInput][4] << endl; break;
+        cout << projectTable[(userInput-1)][4] << endl; break;
       case 3: isInSubMenu = false; break;
       default:
           cout << "Invalid choice! Please try again." << endl;
           break;
     }
   }
-
-
 }
 
 
@@ -263,25 +260,26 @@ void TerminalHandler::GenericCommands(string userInput) {
 }
 void TerminalHandler::HandleInput(string userInput) {
   if(GetNumberFromUserInput(userInput)!=-1){
+    int numberInput = GetNumberFromUserInput(userInput);
     switch (currentState) {
         case WindowState::MENU: 
-          MainMenuSelectionResponse(GetNumberFromUserInput(userInput)); break;
+          MainMenuSelectionResponse(numberInput); break;
         case WindowState::PROJECTS: 
-          ProjectSelectionResponse(GetNumberFromUserInput(userInput)); break;
+          ProjectSelectionResponse(numberInput); break;
         case WindowState::SORTING_OPTIONS:
-          SortingOptionsSelectionResponse(GetNumberFromUserInput(userInput));break;
+          SortingOptionsSelectionResponse(numberInput);break;
         case WindowState::HELP: 
-          HelpSelectionResponse(GetNumberFromUserInput(userInput)); break;
+          HelpSelectionResponse(numberInput); break;
         case WindowState::VIEW_OPTIONS: 
-          ViewOptionsSelectionResponse(GetNumberFromUserInput(userInput)); break;
+          ViewOptionsSelectionResponse(numberInput); break;
         case WindowState::QUIT:
           /*Main loop checks currentState == quit & leaves loop so no code needed*/ break;
     }
   }
+  else{GenericCommands(userInput);}
 }
 
 void TerminalHandler::Run() {
-
 //Inital Text and Process
   cout 
     << "WELCOME TO MY C++ PORTFOLIO\n"

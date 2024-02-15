@@ -2,6 +2,7 @@
 #define GENSTACK_H
 
 #include <iostream>
+#include <exception>
 using namespace std;
 
 class GenStack{
@@ -12,7 +13,7 @@ class GenStack{
 
     //Core functions
     void push(char data); //places element at top of stack
-    char pop(); //return and remove
+    char pop(); //returns and remove
     char peek(); //returns top of stack
 
     //Aux functions  

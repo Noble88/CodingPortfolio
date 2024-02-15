@@ -1,4 +1,4 @@
-Project Name: Stack Practice (WIP)
+Project Name: Stack Practice
 Project Type: In Class Pratice
-Completed Date: 0000-00-00
-Description: This code is centered around using the stack via methods, operations, and algorithms. INSERT REST OF DESCRIPTION
+Completed Date: 2024-02-14
+Description: This code is centered around building a stack from scratch implementing all the methods, operations, and algorithms for one.
