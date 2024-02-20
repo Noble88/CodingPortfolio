@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <experimental/filesystem>
 #include <cstdlib>
+#include <algorithm>
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -42,20 +43,23 @@ public:
 //Sorting Options will effect how the projects a displayed (by date, name, etc)
   void DisplaySortingOptions();
   void SortingOptionsSelectionResponse(int userInput);
+  //Helper Methods
+  void SortProjectByFileName(bool ascending);
+  void SortProjectByProjectName(bool ascending);
+  void SortProjectByDateCompleted(bool ascending);
 
 //Sorting Options will effect how the projects a displayed (by date, name, etc)
   void DisplayViewOptions();
   void ViewOptionsSelectionResponse(int userInput);
 
 //Projects Window State: Displays the projects in the "projects_folder" folder
+  void DisplayProjects();
+  void ProjectSelectionResponse(int userInput); 
+  //Helper Methods
   vector<string> GetProjectData(const string& metadataFilePath);
   void CreateProjectDataBase(const string& projectsFolderPath);
   void RunProject(int projectIndex);
   string FormatSection(string section, int characterLimit);
-
-  void DisplayProjects();
-  void ProjectSelectionResponse(int userInput); 
-
 //Building Executables
   void BuildExecutables();
 

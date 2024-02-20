@@ -1,6 +1,5 @@
 #include "TerminalHandler.h"
 #include "../Resources/Debugger/Debugger.h"
-#include <iostream>
 
 
 // TODO: There is layering, REDO HOW TERMINAL INTERACTIONS SO THAT WHEN QUITTING
@@ -94,16 +93,133 @@ void TerminalHandler::HelpSelectionResponse(int userInput){}
 
 
 //>Sorting Options< Display & Responce
-void TerminalHandler::DisplaySortingOptions() {
-  cout 
-    << "[SORTING OPTIONS}\n"
-    <<" UNAVALIBLE FOR NOW!\n"
-      << "General Command: ";
+string currentSortingOption=""; //Project Name | Date Completed |
+  //Help Methods
+void TerminalHandler::SortProjectByFileName(bool ascending){
+  // Define a struct to hold project information
+    struct ProjectInfo {
+      std::string projectName;
+      int originalPlacement;
+    };
+
+    // Method to build ProjectInfo struct
+    auto buildProjectInfo = [this](int index) {
+      ProjectInfo project;
+      project.projectName = projectTable[index][0];
+      project.originalPlacement = index;
+      return project;
+    };
+
+    // Create a vector of ProjectInfo
+    std::vector<ProjectInfo> projects;
+    for (int i = 0; i < MAX_PROJECTS; ++i) {
+      if (!projectTable[i][0].empty()) { // Check if the project name is not empty
+        projects.push_back(buildProjectInfo(i));
+      }
+    }
+
+    // Sort the projects vector by project name
+    std::sort(projects.begin(), projects.end(),
+        [ascending](const ProjectInfo& a, const ProjectInfo& b) {
+          if (ascending)
+            return a.projectName < b.projectName;
+          else
+            return a.projectName > b.projectName;
+        });
+
+    // Rearrange the projectTable array based on the sorted project names
+    std::string newProjectTable[MAX_PROJECTS][NUM_COLUMNS];
+    for (size_t i = 0; i < projects.size(); ++i) {
+      int originalIndex = projects[i].originalPlacement;
+      for (int j = 0; j < NUM_COLUMNS; ++j) {
+        newProjectTable[i][j] = projectTable[originalIndex][j];
+      }
+    }
+
+    // Update the original projectTable with the rearranged data
+    std::copy(&newProjectTable[0][0], &newProjectTable[0][0] + MAX_PROJECTS * NUM_COLUMNS, &projectTable[0][0]);
+  }
+void TerminalHandler::SortProjectByProjectName(bool ascending) {
+  // Define a struct to hold project information
+  struct ProjectInfo {
+    std::string projectName;
+    int originalPlacement;
+  };
+
+  // Method to build ProjectInfo struct
+  auto buildProjectInfo = [this](int index) {
+    ProjectInfo project;
+    project.projectName = projectTable[index][1];
+    project.originalPlacement = index;
+    return project;
+  };
+
+  // Create a vector of ProjectInfo
+  std::vector<ProjectInfo> projects;
+  for (int i = 0; i < MAX_PROJECTS; ++i) {
+    if (!projectTable[i][1].empty()) { // Check if the project name is not empty
+      projects.push_back(buildProjectInfo(i));
+    }
+  }
+
+  // Sort the projects vector by project name
+  std::sort(projects.begin(), projects.end(),
+      [ascending](const ProjectInfo& a, const ProjectInfo& b) {
+        if (ascending)
+          return a.projectName < b.projectName;
+        else
+          return a.projectName > b.projectName;
+      });
+
+  // Rearrange the projectTable array based on the sorted project names
+  std::string newProjectTable[MAX_PROJECTS][NUM_COLUMNS];
+  for (size_t i = 0; i < projects.size(); ++i) {
+    int originalIndex = projects[i].originalPlacement;
+    for (int j = 0; j < NUM_COLUMNS; ++j) {
+      newProjectTable[i][j] = projectTable[originalIndex][j];
+    }
+  }
+
+  // Update the original projectTable with the rearranged data
+  std::copy(&newProjectTable[0][0], &newProjectTable[0][0] + MAX_PROJECTS * NUM_COLUMNS, &projectTable[0][0]);
 }
-void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {}
+void TerminalHandler::SortProjectByDateCompleted(bool ascending) {
+  /*
+    // Define a lambda function for comparing dates completed
+    auto compareByDate = [](const std::string& a, const std::string& b) {
+        // Implement your date comparison logic here
+        return a < b; // Change to a > b for descending order
+    };
+
+    // Sort the project table by date completed
+    std::sort(projectTable, projectTable + MAX_PROJECTS, [compareByDate](const auto& a, const auto& b) {
+        return compareByDate(a[3], b[3]);
+    });
+    */
+}
+
+  //Display & Responce
+void TerminalHandler::DisplaySortingOptions() {
+  std::cout << "[SORTING OPTIONS: Sorted by "<<currentSortingOption<<"]\n"
+            << "1) Sort by File Name\n"
+            << "2) Sort by Project Name\n"
+            << "3) Sort by Date Completed\n"
+            << "Enter option: ";
+}
+void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {
+    switch (userInput) {
+      case 1: SortProjectByFileName(true); currentSortingOption="File Name"; break;
+      case 2: SortProjectByProjectName(true); currentSortingOption="Project Name";
+        break;
+      case 3: SortProjectByDateCompleted(true); currentSortingOption="Date Completed";
+        break;
+      default:
+        std::cout << "Invalid option.\n";
+        break;
+  }
+}
 
 //>ViewOptions< Display & Responce
-
 void TerminalHandler::DisplayViewOptions(){
   cout << "[VIEWING OPTIONS] \n"
        << "Current Setting: " << projectDisplayFormat << "\n";
@@ -211,9 +327,10 @@ string TerminalHandler::FormatSection(string section, int characterLimit) {
 
   return formattedSection;
 }
+
   //Display & Responce
 void TerminalHandler::DisplayProjects() {
-  cout << "\n\n[PROJECTS]\n";
+  cout << "\n\n[PROJECTS: Sorted by "<<currentSortingOption<<"]\n";
 
   cout <<"|  ";
   for(int i=0; i<NUM_COLUMNS; ++i){
@@ -337,7 +454,7 @@ void TerminalHandler::Run() {
   
   currentState = WindowState::MENU;
   CreateProjectDataBase("projects_folder");
-  projectVisibilityToggle[0] = false; //File Name
+  projectVisibilityToggle[0] = true; //File Name
   projectVisibilityToggle[1] = true; //Project Name
   projectVisibilityToggle[2] = true; //Project Type
   projectVisibilityToggle[3] = true; //Completed Date
