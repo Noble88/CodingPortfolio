@@ -8,7 +8,7 @@
 int main() {
   Debugger::enableCategory("Main Method");
   Debugger::enableCategory("TERMINNAL_HANDLER");
-  DEBUG_MSG("RUNNING PROJECT MANAGER MAIN\n");
+  ///DEBUG_MSG("RUNNING PROJECT MANAGER MAIN\n");
 
   TerminalHandler terminalHandler;
   terminalHandler.Run();

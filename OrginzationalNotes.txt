@@ -1,6 +1,7 @@
 Types of code include
 Teacher Example | In Class Pratice | Homework | Personal Code
 
+shift + alt + 0 = fold all
 
 --for github upload--
 

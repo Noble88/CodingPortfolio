@@ -14,9 +14,13 @@ TerminalHandler::TerminalHandler() {
 
 const int MAX_PROJECTS = 100; // Maximum number of projects
 const int NUM_COLUMNS = 5;     // Number of columns
-
-std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
 string projectDisplayFormat; // [minimal], [show all]
+std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
+bool projectVisibilityToggle[NUM_COLUMNS];
+int projectSpacing[NUM_COLUMNS];
+string projectSectionNames[NUM_COLUMNS] = {"File Name","Project Name","Project Type","Date Completed","Description"};
+
+
 
 
 
@@ -99,43 +103,52 @@ void TerminalHandler::DisplaySortingOptions() {
 void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {}
 
 //>ViewOptions< Display & Responce
+
 void TerminalHandler::DisplayViewOptions(){
   cout << "[VIEWING OPTIONS] \n"
-    << "Current Setting: "<< projectDisplayFormat <<"\n"
-    << "1) Minimal View \n"
-    << "2) Show All Info \n"
-      << "Option Number or General Command: ";
+       << "Current Setting: " << projectDisplayFormat << "\n";
+  for (int i = 0; i < NUM_COLUMNS; ++i) {
+      cout << i + 1 << ") "<<FormatSection(projectSectionNames[i],15)<<": " << (projectVisibilityToggle[i] ? " On" : " Off") << "\n";
+  }
+  cout << "Option Number or General Command: ";
 }
 void TerminalHandler::ViewOptionsSelectionResponse(int userInput){
-  switch (userInput){
-    case 1: projectDisplayFormat= "minimal"; break;
-    case 2: projectDisplayFormat="show all"; break;
+  if (userInput >= 1 && userInput <= NUM_COLUMNS) {
+      projectVisibilityToggle[userInput - 1] = !projectVisibilityToggle[userInput - 1];
+      cout << FormatSection(projectSectionNames[userInput - 1],15) << userInput << ": visibility toggled to " << (projectVisibilityToggle[userInput - 1] ? "On" : "Off") << ".\n";
+  } else {
+      cout << "Invalid input. Please try again.\n";
   }
 }
 
 //>Project< Display & Responce & Data Creation
   //Data Creation
 vector<string> TerminalHandler::GetProjectData(const string& metadataFilePath) {
-    vector<string> projectData;
-    ifstream metadataFile(metadataFilePath);
-    string line;
+  vector<string> projectData;
+  ifstream metadataFile(metadataFilePath);
+  string line;
 
-    // Initialize project data with empty strings
-    projectData.resize(NUM_COLUMNS);
+  // Initialize project data with empty strings
+  projectData.resize(NUM_COLUMNS);
 
-    // Read metadata file line by line
-    while (getline(metadataFile, line)) {
-        if (line.find("Project Name:") != string::npos) {
-            projectData[1] = line.substr(line.find(":") + 1);
-        } else if (line.find("Project Type:") != string::npos) {
-            projectData[2] = line.substr(line.find(":") + 1);
-        } else if (line.find("Completed Date:") != string::npos) {
-            projectData[3] = line.substr(line.find(":") + 1);
-        } else if (line.find("Description:") != string::npos) {
-            projectData[4] = line.substr(line.find(":") + 1);
-        }
+  // Read metadata file line by line
+  while (getline(metadataFile, line)) {
+      if (line.find("Project Name:") != string::npos) {
+          projectData[1] = line.substr(line.find(":") + 1);
+      } else if (line.find("Project Type:") != string::npos) {
+          projectData[2] = line.substr(line.find(":") + 1);
+      } else if (line.find("Completed Date:") != string::npos) {
+          projectData[3] = line.substr(line.find(":") + 1);
+      } else if (line.find("Description:") != string::npos) {
+          projectData[4] = line.substr(line.find(":") + 1);
+      }
+  }
+  for(int i=0; i<NUM_COLUMNS;++i){
+    if(projectData[i][0]==' '){
+      projectData[i].erase(0, 1);
     }
-    metadataFile.close(); // Close the file
+  }
+  metadataFile.close(); // Close the file
 
     return projectData;
 }
@@ -179,36 +192,49 @@ void TerminalHandler::RunProject(int projectIndex) {
       cout << "Executable not found: " << projectTable[projectIndex][1] << endl;
   }
 }
+string TerminalHandler::FormatSection(string section, int characterLimit) {
+  std::string formattedSection;
 
+  if (section.length() <= characterLimit) {
+      // If the section length is less than or equal to the character limit, no need to truncate
+      formattedSection = section;
+
+      // Add spaces to pad the section
+      int numSpacesToAdd = characterLimit - section.length();
+      for (int i = 0; i < numSpacesToAdd; ++i) {
+          formattedSection += " ";
+      }
+  } else {
+      // If the section length is greater than the character limit, truncate and add ...
+      formattedSection = section.substr(0, characterLimit - 3) + "...";
+  }
+
+  return formattedSection;
+}
   //Display & Responce
 void TerminalHandler::DisplayProjects() {
-  cout << "\n\n[PROJECTS - View: "<< projectDisplayFormat <<"]\n";
-  if(projectDisplayFormat=="minimal"){
-    for (int i = 0; i < MAX_PROJECTS; ++i) {
-      if (projectTable[i][0].empty()) {
-          break; // Stop if we reach an empty row
-      }
-      cout << i + 1 << ") " 
-        << projectTable[i][1] << "| " //"Project Name
-        << projectTable[i][2]  << " | " //"Project Type
-        << projectTable[i][3] << " | \n"; // Completed Date
+  cout << "\n\n[PROJECTS]\n";
+
+  cout <<"|  ";
+  for(int i=0; i<NUM_COLUMNS; ++i){
+    if(projectVisibilityToggle[i]){
+      cout << FormatSection(projectSectionNames[i], projectSpacing[i]) << " | ";
     }
   }
-  if(projectDisplayFormat=="show all"){
-    for (int i = 0; i < MAX_PROJECTS; ++i) {
-        if (projectTable[i][0].empty()) {
-            break; // Stop if we reach an empty row
-        }
-
-        // Print project data
-        cout << "Project " << (i + 1) << ":" << endl;
-        cout << "Exact Folder Name: " << projectTable[i][0] << endl;
-        cout << "Project Name:      " << projectTable[i][1] << endl;
-        cout << "Project Type:      " << projectTable[i][2] << endl;
-        cout << "Completed Date:    " << projectTable[i][3] << endl;
-        cout << "Description:       " << projectTable[i][4] << endl;
-        cout << endl;
+  cout <<"\n";
+  
+  for (int i = 0; i < MAX_PROJECTS; ++i) {
+    if (projectTable[i][0].empty()) {
+        break; // Stop if we reach an empty row
     }
+
+    cout << i + 1 << ") ";
+    for(int j=0; j<NUM_COLUMNS; ++j){
+      if(projectVisibilityToggle[j]){
+        cout << FormatSection(projectTable[i][j], projectSpacing[j]) << " | ";
+      }
+    }
+    cout <<"\n";
   }
   cout << "Enter a number or General Command: ";
 }
@@ -223,10 +249,8 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
     cout << "3) Back" << endl;
 
     // Get user input
-    int choice;
     cout << "Enter your choice: ";
-    cin >> choice;
-
+    int choice = GetNumberFromUserInput(GetUserInput());
     // Process user's choice
 
     switch (choice) {
@@ -240,8 +264,7 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
         cout << projectTable[(userInput-1)][4] << endl; break;
       case 3: isInSubMenu = false; break;
       default:
-          cout << "Invalid choice! Please try again." << endl;
-          break;
+          cout << "Invalid choice! Please try again." << endl; isInSubMenu = false; break;
     }
   }
 }
@@ -314,7 +337,17 @@ void TerminalHandler::Run() {
   
   currentState = WindowState::MENU;
   CreateProjectDataBase("projects_folder");
-  projectDisplayFormat = "minimal";
+  projectVisibilityToggle[0] = false; //File Name
+  projectVisibilityToggle[1] = true; //Project Name
+  projectVisibilityToggle[2] = true; //Project Type
+  projectVisibilityToggle[3] = true; //Completed Date
+  projectVisibilityToggle[4] = false; //Description 
+
+  projectSpacing[0] = 25; //File Name
+  projectSpacing[1] = 25; //Project Name
+  projectSpacing[2] = 25; //Project Type
+  projectSpacing[3] = 15; //Completed Date
+  projectSpacing[4] = 100; //Description 
   
   while (currentState != WindowState::QUIT) {
 

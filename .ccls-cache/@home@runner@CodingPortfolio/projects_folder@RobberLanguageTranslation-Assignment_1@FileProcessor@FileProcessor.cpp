@@ -11,8 +11,9 @@ void FileProcessor::ProcessFile(string inputFileName, string outputFileName){
   
   //Check if files are open
   if (!input.is_open() || !output.is_open()) {
-      cerr << "Error opening files!" << endl;
-      return;
+    cerr << "Error opening files!" << endl;
+    cout << "INPUT: "<<inputFileName<<" | OUTPUT: "<<outputFileName;
+    return;
   }
 
   // Write the HTML boilerplate and header

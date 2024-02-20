@@ -51,6 +51,7 @@ public:
   vector<string> GetProjectData(const string& metadataFilePath);
   void CreateProjectDataBase(const string& projectsFolderPath);
   void RunProject(int projectIndex);
+  string FormatSection(string section, int characterLimit);
 
   void DisplayProjects();
   void ProjectSelectionResponse(int userInput); 
