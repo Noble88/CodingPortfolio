@@ -7,6 +7,7 @@ PROJECTS_FOLDER="projects_folder"
 PROJECTS=$(find "$PROJECTS_FOLDER" -type d)
 
 # Build executables in each project folder using their respective makefiles
+IFS=$'\n' # Set IFS to newline to properly handle folder names with spaces
 for project in $PROJECTS; do
     if [ -f "$project/makefile" ]; then
         make -C "$project" -f makefile

@@ -100,6 +100,7 @@
   - "Minimal View": displays the coding project's name, project type, & data completed
   - "Show All Info": displays all the info stored for each project in chunks
 
+
 ## Contributing
   ### General Contribution
   Feel free to leave a comment suggesting and cool implementation, but other than that this is a personal project so I don't want anyone modifing the repository. Also by 2026 I will have graduated and most likely stop updating this project
