@@ -2,7 +2,7 @@
 #define MODEL_H
 
 #include <iostream>
-using namespace std; //IF USING STRING
+using namespace std;
 
 class Model{
   public:

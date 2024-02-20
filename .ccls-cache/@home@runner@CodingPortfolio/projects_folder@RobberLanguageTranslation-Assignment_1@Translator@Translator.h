@@ -2,7 +2,7 @@
 #define TRANSLATOR_H
 
 #include <iostream>
-#include "Model.h"
+#include "../Model/Model.h"
 
 using namespace std;
 

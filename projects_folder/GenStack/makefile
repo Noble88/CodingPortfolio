@@ -1,7 +1,7 @@
 CXX = g++
-SRC_DIR = .
+SRC_DIRS = . $(shell find . -type d)
 PROJECT_NAME = $(notdir $(CURDIR))
-SOURCES := $(wildcard $(SRC_DIR)/*.cpp)
+SOURCES := $(foreach dir,$(SRC_DIRS),$(wildcard $(dir)/*.cpp))
 OBJECTS := $(SOURCES:.cpp=.o)
 
 .PHONY: all clean

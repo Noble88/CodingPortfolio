@@ -1,4 +1,4 @@
-Project Name: Stack Practice
+Project Name: Creating A Stack
 Project Type: In Class Pratice
 Completed Date: 2024-02-14
 Description: This code is centered around building a stack from scratch implementing all the methods, operations, and algorithms for one.

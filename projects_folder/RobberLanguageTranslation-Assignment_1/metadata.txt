@@ -1,0 +1,4 @@
+Project Name: Robber Language Translation
+Project Type: Assignment
+Completed Date: 2024-02-19
+Description: This code reads a .txt (in this case its called EnglishEntry.txt) and translates it to Robber Language. The translation is formated into a HTML file (in this case its called HTMLFormat.html). The HTML should have the english text at the top (bolded) and the translated text at the bottom (italics) 
