@@ -14,8 +14,10 @@ public:
   // core functions
   void Insert(char data); // places element at back of queue
   char Remove(); //dequeue
-  char Peek(); // returns front of queue
+  void Enqueue(char data);
 
+
+  char Peek(); // returns front of queue
   bool IsEmpty();
   bool IsFull();
   unsigned int GetSize(); //unsigned means wont return NEGATIVE

@@ -22,7 +22,8 @@ void GenQueue::Insert(char data) {
   if(IsFull()){
     throw runtime_error("Queue is full");
   }
-  myQueue[rear++] = data;
+  myQueue[rear++]=data;
+  rear%=mSize;
   numElements++;
 }
 
@@ -32,8 +33,23 @@ char GenQueue::Remove() {
   }
   char c = '\0';
   c = myQueue[front++];
+  front%=mSize;
   numElements--;
   return c;
+}
+
+void GenQueue::Enqueue(char data){
+  if(IsFull()){
+    throw runtime_error("priority Queue is full");
+  }
+
+  int i= numElements-1;
+  while(i>=0 && data<myQueue[i]){
+    myQueue[i+1]=myQueue[i];
+    i--;
+  }
+  myQueue[i+1]=data;
+  numElements++;
 }
 
 char GenQueue::Peek() { 

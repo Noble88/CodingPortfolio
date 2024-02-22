@@ -6,9 +6,9 @@
 #include <vector>
 #include <fstream>
 #include <filesystem>
-#include <experimental/filesystem>
-#include <cstdlib>
-#include <algorithm>
+#include <cstdlib> // For system function
+#include <algorithm> //Gives sorting Algorithms
+
 
 using namespace std;
 namespace fs = std::filesystem;
@@ -48,7 +48,7 @@ public:
   void SortProjectByProjectName(bool ascending);
   void SortProjectByDateCompleted(bool ascending);
 
-//Sorting Options will effect how the projects a displayed (by date, name, etc)
+//View will change what catagory you can see at once
   void DisplayViewOptions();
   void ViewOptionsSelectionResponse(int userInput);
 

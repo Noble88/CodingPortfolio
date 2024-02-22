@@ -1,4 +1,4 @@
-# Welcome to my Coding Portfolio
+**Welcome to my Coding Portfolio**
 
 ## Description
   Personally, This project is a way to run all my different C++ coding projects or school assignments I have accumlated over time. The point of this project was to create a single area where anyone can simply see my C++ knowledge without dumping scattered files to some employer who will most likely won't bother (or thats the hope). 
@@ -36,25 +36,6 @@
 - [List of what to do for read me](#list-of-what-to-do-for-read-me)
 
 ## Installation Process
-  ### How to Build
-  ```Bash
-    chmod +x build_projects.sh
-    ./build_projects.sh
-    make
-  ```
-
-  ### How to Run
-  ```Bash
-    ./main
-  ```
-  
-  ### Terminal Input To Build & Run (CopyPasta)
-  ```Bash
-    chmod +x build_projects.sh
-    ./build_projects.sh
-    make
-    ./main
-  ```
   
 ## Usage 
   ### Getting Started 
@@ -62,9 +43,35 @@
   2) Add metadata (with proper format), main.cpp, and copy of makefile
      - *see "projects_folder/exampleProject" for reference*
   3) Make sure any added projects do not leave the scope of its own folder!
+
+  ### Building and Running
+  Building
+  ```Bash
+    chmod +x build_projects.sh
+    ./build_projects.sh
+    make
+  ```
+
+  Running
+  ```Bash
+    ./main
+  ```
+
+  Terminal Input To Build & Run (CopyPasta)
+  ```Bash
+    chmod +x build_projects.sh
+    ./build_projects.sh
+    make
+    ./main
+  ```
   
   Other Notes...
   - metadata.txt: The Prefixes of each line "Project Name:", "Project Type:", is taken out when  In the metadata putting Description: delcare that line as a description and will not be shown in the meta data that appears when viewing projects
+  ### Running Specific Executables files 
+  Go into the folder: cd projects_folder/...
+  Build executable: make
+  Then launch executable: ./Project_Executable
+  
 
 ## Configuration (WIP) \[Progress Status: Not Worked On Yet\]
   ### Environment Variables:
@@ -85,8 +92,10 @@
 ## Features
   ### Running All Creating C++ Projects
   - By following the [Getting Started](#getting-started) you can create as many projects as you want (inside the folder called "projects_folder") and be able to run them all in one place
+  - 
   ### Building Projects While Running
-  - You will be able to type "build" or "build executables"
+  - While running the code, You will be able to type "build" or "build executables" to build all the executables in projects_folder
+  - Though I think it will only work if the code that its building has no errors
 
   ### Input Cleaner
   Your input will be cleaned by...
@@ -99,7 +108,6 @@
   Viewing: Typing "view" or "view options" you can select what type of viewing you would like...
   - "Minimal View": displays the coding project's name, project type, & data completed
   - "Show All Info": displays all the info stored for each project in chunks
-
 
 ## Contributing
   ### General Contribution

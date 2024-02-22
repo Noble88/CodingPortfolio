@@ -1,7 +1,6 @@
 #include "TerminalHandler.h"
 #include "../Resources/Debugger/Debugger.h"
 
-
 // TODO: There is layering, REDO HOW TERMINAL INTERACTIONS SO THAT WHEN QUITTING
 // TODO: [Add debugger for this file]
 // WONT GIVE "ERROR: Invalid Window State - attempted to enter state: N/A"
@@ -18,10 +17,6 @@ std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project 
 bool projectVisibilityToggle[NUM_COLUMNS];
 int projectSpacing[NUM_COLUMNS];
 string projectSectionNames[NUM_COLUMNS] = {"File Name","Project Name","Project Type","Date Completed","Description"};
-
-
-
-
 
 //Input Helper Methods
 std::string TerminalHandler::CleanUserInput(string userInput) {
@@ -197,7 +192,6 @@ void TerminalHandler::SortProjectByDateCompleted(bool ascending) {
     });
     */
 }
-
   //Display & Responce
 void TerminalHandler::DisplaySortingOptions() {
   std::cout << "[SORTING OPTIONS: Sorted by "<<currentSortingOption<<"]\n"
@@ -219,6 +213,7 @@ void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {
   }
 }
 
+
 //>ViewOptions< Display & Responce
 void TerminalHandler::DisplayViewOptions(){
   cout << "[VIEWING OPTIONS] \n"
@@ -236,6 +231,7 @@ void TerminalHandler::ViewOptionsSelectionResponse(int userInput){
       cout << "Invalid input. Please try again.\n";
   }
 }
+
 
 //>Project< Display & Responce & Data Creation
   //Data Creation
@@ -299,14 +295,12 @@ void TerminalHandler::RunProject(int projectIndex) {
   string fullPath = projectFolderPath + "/" + executableName;
   
   if (fs::is_regular_file(fullPath)) {
-    int result = std::system(fullPath.c_str());
+    string command = "cd " + projectFolderPath + " && ./" + executableName + " && cd -";//This command cd into execacutable, runs it, then reverts back to the orginal directory
+    int result = std::system(command.c_str());
 
-    if (result != 0) {
-      cerr << "Error executing project: " << projectTable[projectIndex][1] << endl;
-    }
-  } else {
-      cout << "Executable not found: " << projectTable[projectIndex][1] << endl;
-  }
+    if (result != 0) { cerr << "Error executing project: " << projectTable[projectIndex][1] << endl;}
+  } 
+  else {cout << "Executable not found: " << projectTable[projectIndex][1] << endl;}
 }
 string TerminalHandler::FormatSection(string section, int characterLimit) {
   std::string formattedSection;
@@ -387,7 +381,6 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
 }
 
 //Building Executables
-#include <cstdlib> // For system function
 void TerminalHandler::BuildExecutables(){
   cout <<"\nAre you sure you want to build executables in all projects? (y/n): ";
   if(GetUserInput()[0] == 'y'){

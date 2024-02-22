@@ -6,6 +6,8 @@ FileProcessor::~FileProcessor(){ cout << "FileProcessor deconstructor" << endl;}
 
 
 void FileProcessor::ProcessFile(string inputFileName, string outputFileName){
+  cout<<"TEST!!!!";
+  
   ifstream input(inputFileName); // Open input file for reading
   ofstream output(outputFileName); // Open output file for writing
   
@@ -13,6 +15,10 @@ void FileProcessor::ProcessFile(string inputFileName, string outputFileName){
   if (!input.is_open() || !output.is_open()) {
     cerr << "Error opening files!" << endl;
     cout << "INPUT: "<<inputFileName<<" | OUTPUT: "<<outputFileName;
+    cout << "Adapting to CodingPortfolio Pathing";
+    
+    
+    
     return;
   }
 
@@ -45,5 +51,6 @@ void FileProcessor::ProcessFile(string inputFileName, string outputFileName){
   // Close the files
   input.close();
   output.close();
+  
   
 }

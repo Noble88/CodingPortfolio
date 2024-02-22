@@ -10,6 +10,8 @@ int main (int argc, char **argv){
     myQueue -> Insert('b');
     myQueue -> Insert('a');
 
+    myQueue-> Enqueue('f');
+
     cout << "PEEK: " << myQueue -> Peek() <<endl;
     cout << "REMOVE: " << myQueue -> Remove() <<endl;
     cout << "PEEK: " << myQueue -> Peek() <<endl;

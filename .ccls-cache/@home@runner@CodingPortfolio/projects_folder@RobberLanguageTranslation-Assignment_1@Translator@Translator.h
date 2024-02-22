@@ -8,7 +8,7 @@ using namespace std;
 
 class Translator{
 private:
-  Model model;
+  Model *model;
 
   public:
     Translator();  // Constructor    
