@@ -8,6 +8,7 @@
 #include <filesystem>
 #include <cstdlib> // For system function
 #include <algorithm> //Gives sorting Algorithms
+#include "miniz.h" // For zipping stuff
 
 
 using namespace std;
@@ -65,6 +66,8 @@ public:
   void BuildExecutables();
   void MiniCommit();
   void UploadToGitHub();
+
+  void ZipProject(string inputFilePath);
 
 //Input To Action Methods
   void GenericCommands(string userInput); //This is present in every "Selection Response" and can go through the different windows

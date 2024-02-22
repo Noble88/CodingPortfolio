@@ -1,0 +1,10 @@
+General Bug Fixes
+
+start_up.sh
+- I wanted my project to be accessible without hassle so by launching ./start_up.sh it will download all the external stuff it needs for this project
+- I also made automattic permissions made for build_projects and clean_projects. so user does need to do chmod +x File.sh for all sh files (except start_up.sh)
+
+Fixes
+- Removed emergency abort from UploadToGitHub() method
+- Made it more clear that you are the Github or building interface. (important menus need to be clear and notable)
+-Updated name of commit file to CommitMsg.txt

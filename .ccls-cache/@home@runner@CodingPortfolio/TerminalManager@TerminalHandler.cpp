@@ -199,7 +199,7 @@ void TerminalHandler::DisplaySortingOptions() {
   std::cout << "[SORTING OPTIONS: Sorted by "<<currentSortingOption<<"]\n"
             << "1) Sort by File Name\n"
             << "2) Sort by Project Name\n"
-            << "3) Sort by Date Completed\n"
+            << "3) Sort by Date Completed(WIP)\n"
             << "Enter option: ";
 }
 void TerminalHandler::SortingOptionsSelectionResponse(int userInput) {
@@ -358,7 +358,8 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
     // Display project menu options
     cout << "1) Run Project" << endl;
     cout << "2) See Description" << endl;
-    cout << "3) Back" << endl;
+    cout << "3) Export Project to Zip" << endl;
+    cout << "4) Back" << endl;
 
     // Get user input
     cout << "Enter your choice: ";
@@ -374,7 +375,10 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
         break;
       case 2:
         cout << projectTable[(userInput-1)][4] << endl; break;
-      case 3: isInSubMenu = false; break;
+      case 3: 
+        ZipProject("projects_folder/"+projectTable[(userInput-1)][0]); 
+        isInSubMenu = false; break;
+      case 4: isInSubMenu = false; break;
       default:
           cout << "Invalid choice! Please try again." << endl; isInSubMenu = false; break;
     }
@@ -384,6 +388,7 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
 
 //Misc
 void TerminalHandler::BuildExecutables(){
+  cout <<"[BUILDING EXECUTABLES]"<<endl;
   cout <<"\nAre you sure you want to build executables in all projects? (y/n): ";
   if(GetUserInput()[0] == 'y'){
     const char* command = "./build_projects.sh"; // Assuming build_projects.sh is in the current directory
@@ -399,8 +404,6 @@ void TerminalHandler::BuildExecutables(){
   CreateProjectDataBase("projects_folder");
   cout <<"\n";
 }
-
-
 void TerminalHandler::MiniCommit(){
     // Set user name and email
   string user_name="Henry Burton";
@@ -431,7 +434,8 @@ void TerminalHandler::MiniCommit(){
 
 }
 void TerminalHandler::UploadToGitHub(){
-  string filename = "Resources/Commit.txt";
+  cout <<"\n[GITHUB]"<<endl;
+  string filename = "Resources/CommitMsg.txt";
   ifstream file(filename);
   if (file.peek() == ifstream::traits_type::eof()) {
       cout << "The commit message file is empty." << endl;
@@ -469,24 +473,47 @@ void TerminalHandler::UploadToGitHub(){
       // Commit changes using the message from the file
       file.close();
 
-      cout <<"\n\nCOMMIT (y/n) = "<<commit_message<<"\n\n";
-      if (GetUserInput() == "y") {
-          // Commit changes
-          string commit_cmd = "git add . && git commit -m \"" + commit_message + "\"";
-          system(commit_cmd.c_str());
 
-          // Push changes to GitHub
-          string push_cmd = "git push -u origin main";
-          system(push_cmd.c_str());
+      // Commit changes
+      string commit_cmd = "git add . && git commit -m \"" + commit_message + "\"";
+      system(commit_cmd.c_str());
 
-          cout << "Files uploaded to GitHub successfully." << endl;
+      // Push changes to GitHub
+      string push_cmd = "git push -u origin main";
+      system(push_cmd.c_str());
 
-          // Clear the content of the file after the commit
-          ofstream clear_file(filename);
-          clear_file.close();
-      }
+      cout << "Files uploaded to GitHub successfully." << endl;
+
+      // Clear the content of the file after the commit
+      ofstream clear_file(filename);
+      clear_file.close();
     }
   }
+}
+string ExtractDirectoryName(const std::string& filePath) {
+  std::string zipFilePath = "../Exports/Project.zip"; // Customize as needed
+
+  mz_zip_archive zip_archive;
+  memset(&zip_archive, 0, sizeof(zip_archive));
+
+  mz_bool status = mz_zip_writer_init_file(&zip_archive, zipFilePath.c_str(), 0);
+  if (!status) {
+      std::cerr << "Failed to init zip writer." << std::endl;
+      return;
+  }
+
+  // Iterate through directory and add files to the zip
+  for (const auto& entry : fs::recursive_directory_iterator(inputDirPath)) {
+      if (fs::is_directory(entry.path())) continue; // Skip directories
+
+      mz_zip_writer_add_file(&zip_archive, entry.path().filename().c_str(), entry.path().c_str(), "", 0, MZ_BEST_COMPRESSION);
+  }
+
+  mz_zip_writer_finalize_archive(&zip_archive);
+  mz_zip_writer_end(&zip_archive);
+
+  std::cout << "Directory zipped successfully: " << zipFilePath << std::endl;
+
 }
 
 //Input To Action Methods

@@ -131,10 +131,11 @@
   - Chat GPT
     - Gave suggestions on tackling asertain aspects of the project
     - Explained methtodology of implementions that were unknown to me
+    - Wrote the build_projects.sh & clean_projects.sh
 
 ## Troubleshooting
+  ### Suggestions
   - You can use the debugger
-  I plan on adding a debugger but for now `¯\_(ツ)_/¯`
 
   ### Known Issues
   - Makefiles sometimes wont update, the fix is to delete the corisponding executables, run "./clean_projects.sh" to delete all executables
