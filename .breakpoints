@@ -3,29 +3,29 @@
     "Readme.md": [
       {
         "id": "e63d566b-431f-47b5-966b-49d380b46173",
-        "line": 45,
-        "version": 6578,
-        "index": 2307
+        "line": 38,
+        "version": 7038,
+        "index": 2209
       }
     ],
     "TerminalManager/TerminalHandler.cpp": [
       {
         "id": "c8f818ee-363e-4878-990a-6951879d2115",
-        "line": 7,
-        "version": 6180,
-        "index": 268
+        "line": 6,
+        "version": 6945,
+        "index": 267
       },
       {
         "id": "bfbfb70f-8d41-458e-8d00-d559d09db4e8",
-        "line": 7,
-        "version": 6180,
-        "index": 268
+        "line": 6,
+        "version": 6945,
+        "index": 267
       },
       {
         "id": "1f8895ac-5a4c-458e-bc7e-252ca28d9afc",
-        "line": 16,
-        "version": 6180,
-        "index": 501
+        "line": 15,
+        "version": 6945,
+        "index": 500
       }
     ],
     "projects_folder/GenStack/makefile": [
