@@ -133,7 +133,12 @@
     - Explained methtodology of implementions that were unknown to me
 
 ## Troubleshooting
+  - You can use the debugger
   I plan on adding a debugger but for now `¯\_(ツ)_/¯`
+
+  ### Known Issues
+  - Makefiles sometimes wont update, the fix is to delete the corisponding executables, run "./clean_projects.sh" to delete all executables
+    - Make sure to do "chmod +x clean_projects.sh" then the command if you get denied permission
 
 ## Contact
   Email me at henrydburton@gmail.com or leave a comemnt on the Github

@@ -13,14 +13,14 @@ TerminalHandler::TerminalHandler() {
 const int MAX_PROJECTS = 100; // Maximum number of projects
 const int NUM_COLUMNS = 5;     // Number of columns
 string projectDisplayFormat; // [minimal], [show all]
-std::string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
+string projectTable[MAX_PROJECTS][NUM_COLUMNS]; //Array that holds project data
 bool projectVisibilityToggle[NUM_COLUMNS];
 int projectSpacing[NUM_COLUMNS];
 string projectSectionNames[NUM_COLUMNS] = {"File Name","Project Name","Project Type","Date Completed","Description"};
 
 //Input Helper Methods
-std::string TerminalHandler::CleanUserInput(string userInput) {
-  std::string cleanedInput;
+string TerminalHandler::CleanUserInput(string userInput) {
+  string cleanedInput;
 
   // Connvert responce to lowercase & Check Character Limit
   for (char c : userInput) {
@@ -35,7 +35,7 @@ std::string TerminalHandler::CleanUserInput(string userInput) {
 
   // Trim leading and trailing whitespace
   auto start = cleanedInput.find_first_not_of(" \t\n\r\f\v");
-  if (start != std::string::npos) {
+  if (start != string::npos) {
     auto end = cleanedInput.find_last_not_of(" \t\n\r\f\v");
     cleanedInput = cleanedInput.substr(start, end - start + 1);
   }
@@ -43,7 +43,7 @@ std::string TerminalHandler::CleanUserInput(string userInput) {
   return cleanedInput;
 }
 string TerminalHandler::GetUserInput() {
-  std::string userInput;
+  string userInput;
   std::cin >> userInput;
   return CleanUserInput(userInput);
 }
@@ -65,6 +65,7 @@ void TerminalHandler::DisplayMainMenu() {
       << "2) Sorting Options\n"
       << "3) Project Viewing Options\n"
       << "4) Build All Executables\n"
+      << "5) Upload Project to GitHub\n"
         << "Option Number or General Command: ";
 }
 void TerminalHandler::MainMenuSelectionResponse(int userInput){
@@ -73,6 +74,7 @@ void TerminalHandler::MainMenuSelectionResponse(int userInput){
     case 2: currentState = WindowState::SORTING_OPTIONS; break;
     case 3: currentState = WindowState::VIEW_OPTIONS; break;
     case 4: BuildExecutables(); break;
+    case 5: UploadToGitHub(); break;
   }
 }
 
@@ -93,7 +95,7 @@ string currentSortingOption=""; //Project Name | Date Completed |
 void TerminalHandler::SortProjectByFileName(bool ascending){
   // Define a struct to hold project information
     struct ProjectInfo {
-      std::string projectName;
+      string projectName;
       int originalPlacement;
     };
 
@@ -123,7 +125,7 @@ void TerminalHandler::SortProjectByFileName(bool ascending){
         });
 
     // Rearrange the projectTable array based on the sorted project names
-    std::string newProjectTable[MAX_PROJECTS][NUM_COLUMNS];
+    string newProjectTable[MAX_PROJECTS][NUM_COLUMNS];
     for (size_t i = 0; i < projects.size(); ++i) {
       int originalIndex = projects[i].originalPlacement;
       for (int j = 0; j < NUM_COLUMNS; ++j) {
@@ -137,7 +139,7 @@ void TerminalHandler::SortProjectByFileName(bool ascending){
 void TerminalHandler::SortProjectByProjectName(bool ascending) {
   // Define a struct to hold project information
   struct ProjectInfo {
-    std::string projectName;
+    string projectName;
     int originalPlacement;
   };
 
@@ -167,7 +169,7 @@ void TerminalHandler::SortProjectByProjectName(bool ascending) {
       });
 
   // Rearrange the projectTable array based on the sorted project names
-  std::string newProjectTable[MAX_PROJECTS][NUM_COLUMNS];
+  string newProjectTable[MAX_PROJECTS][NUM_COLUMNS];
   for (size_t i = 0; i < projects.size(); ++i) {
     int originalIndex = projects[i].originalPlacement;
     for (int j = 0; j < NUM_COLUMNS; ++j) {
@@ -181,7 +183,7 @@ void TerminalHandler::SortProjectByProjectName(bool ascending) {
 void TerminalHandler::SortProjectByDateCompleted(bool ascending) {
   /*
     // Define a lambda function for comparing dates completed
-    auto compareByDate = [](const std::string& a, const std::string& b) {
+    auto compareByDate = [](const string& a, const string& b) {
         // Implement your date comparison logic here
         return a < b; // Change to a > b for descending order
     };
@@ -303,7 +305,7 @@ void TerminalHandler::RunProject(int projectIndex) {
   else {cout << "Executable not found: " << projectTable[projectIndex][1] << endl;}
 }
 string TerminalHandler::FormatSection(string section, int characterLimit) {
-  std::string formattedSection;
+  string formattedSection;
 
   if (section.length() <= characterLimit) {
       // If the section length is less than or equal to the character limit, no need to truncate
@@ -321,7 +323,6 @@ string TerminalHandler::FormatSection(string section, int characterLimit) {
 
   return formattedSection;
 }
-
   //Display & Responce
 void TerminalHandler::DisplayProjects() {
   cout << "\n\n[PROJECTS: Sorted by "<<currentSortingOption<<"]\n";
@@ -380,7 +381,8 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
   }
 }
 
-//Building Executables
+
+//Misc
 void TerminalHandler::BuildExecutables(){
   cout <<"\nAre you sure you want to build executables in all projects? (y/n): ";
   if(GetUserInput()[0] == 'y'){
@@ -396,6 +398,95 @@ void TerminalHandler::BuildExecutables(){
   }
   CreateProjectDataBase("projects_folder");
   cout <<"\n";
+}
+
+
+void TerminalHandler::MiniCommit(){
+    // Set user name and email
+  string user_name="Henry Burton";
+  string user_email="henrydburton@gmail.com";
+  string set_user_cmd = "git config --global user.name \"" + user_name + "\" && git config --global user.email \"" + user_email + "\"";
+  system(set_user_cmd.c_str());
+
+    // Get commit message
+  cout<<"Enter your commit message: ";
+  string commit_message = GetUserInput();
+
+  cout <<"\nAre you sure you want to upload all changes to GitHub? (y/n): ";
+  string input = GetUserInput();
+  if(input=="y"){
+    // Commit changes
+    string commit_cmd = "git add . && git commit -m \"" + commit_message + "\"";
+    system(commit_cmd.c_str());
+
+    // Push changes to GitHub
+    string push_cmd = "git push -u origin main";
+    system(push_cmd.c_str());
+
+    std::cout << "Files uploaded to GitHub successfully." << std::endl;
+  }
+  else{
+    std::cout << "Files not uploaded to GitHub." << std::endl;
+  }
+
+}
+void TerminalHandler::UploadToGitHub(){
+  string filename = "Resources/Commit.txt";
+  ifstream file(filename);
+  if (file.peek() == ifstream::traits_type::eof()) {
+      cout << "The commit message file is empty." << endl;
+      cout << "Do you want to perform a mini-commit instead? (y/n): ";
+      if (GetUserInput() == "y") {
+          // Perform mini-commit logic here
+          MiniCommit();
+          return; // Exit the function if the user chooses to do a mini-commit
+      }
+  } 
+  else {
+    // Read the content of the file and display it to the user
+    string line;
+    string commit_message;
+    cout << "The following commit message will be uploaded to GitHub:\n\n";
+    while (getline(file, line)) {
+        cout << line << endl;
+        commit_message += line + "\n"; // Append each line to the commit message
+    }
+    file.close();
+
+    // Ask the user if they want to proceed
+    cout << "\nAre you sure you want to upload all changes to GitHub? (y/n): ";
+    if (GetUserInput() == "n") {
+        cout << "Files not uploaded to GitHub." << endl;
+        return; // Exit the function if the user chooses not to upload
+    }
+    else{
+      // Set user name and email
+      string user_name = "Henry Burton";
+      string user_email = "henrydburton@gmail.com";
+      string set_user_cmd = "git config --global user.name \"" + user_name + "\" && git config --global user.email \"" + user_email + "\"";
+      system(set_user_cmd.c_str());
+
+      // Commit changes using the message from the file
+      file.close();
+
+      cout <<"\n\nCOMMIT (y/n) = "<<commit_message<<"\n\n";
+      if (GetUserInput() == "y") {
+          // Commit changes
+          string commit_cmd = "git add . && git commit -m \"" + commit_message + "\"";
+          system(commit_cmd.c_str());
+
+          // Push changes to GitHub
+          string push_cmd = "git push -u origin main";
+          system(push_cmd.c_str());
+
+          cout << "Files uploaded to GitHub successfully." << endl;
+
+          // Clear the content of the file after the commit
+          ofstream clear_file(filename);
+          clear_file.close();
+      }
+    }
+  }
 }
 
 //Input To Action Methods
@@ -415,6 +506,8 @@ void TerminalHandler::GenericCommands(string userInput) {
     currentState = WindowState::VIEW_OPTIONS;
   else if (userInput == "build" || userInput == "build executables")
     BuildExecutables();
+    else if (userInput == "github" || userInput == "upload")
+      UploadToGitHub();
   else
     std::cout << "Invalid Selection - Type Help for Commands & Command Formatting";
 }

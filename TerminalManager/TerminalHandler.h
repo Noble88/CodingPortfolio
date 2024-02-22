@@ -60,8 +60,11 @@ public:
   void CreateProjectDataBase(const string& projectsFolderPath);
   void RunProject(int projectIndex);
   string FormatSection(string section, int characterLimit);
-//Building Executables
+
+//Misc methods
   void BuildExecutables();
+  void MiniCommit();
+  void UploadToGitHub();
 
 //Input To Action Methods
   void GenericCommands(string userInput); //This is present in every "Selection Response" and can go through the different windows

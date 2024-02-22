@@ -2,32 +2,3 @@ Types of code include
 Teacher Example | In Class Pratice | Homework | Personal Code
 
 shift + alt + 0 = fold all
-
---for github upload--
-
--initlize git repository
-git init
-
--Add the remote GitHub repository
-git remote add origin https://github.com/Noble88/CodingPortfolio.git
-
--Add files to project
-git add .
-
-
--Configure
-git config --global user.name "Henry Burton"
-git config --global user.email "henrydburton@gmail.com"
-
--commit
-git commit -m "Initial commit"
-
--Push files
-git push -u origin main
-
--copypasta
-git config --global user.name "Henry Burton" && git config --global user.email "henrydburton@gmail.com" && git add . && git commit -m "INSERT COMMENT HERE" && git push -u origin main
-
-
-git add . && git commit -m "Intial Version of Project - Works" && git push -u origin main
-

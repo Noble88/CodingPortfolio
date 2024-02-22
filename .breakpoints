@@ -4,27 +4,35 @@
       {
         "id": "e63d566b-431f-47b5-966b-49d380b46173",
         "line": 38,
-        "version": 7038,
+        "version": 7060,
         "index": 2209
+      }
+    ],
+    "Resources/Commit.txt": [
+      {
+        "id": "068c17b9-014b-4a9c-b04e-6ad6a7a4fcee",
+        "line": 1,
+        "version": 953,
+        "index": 0
       }
     ],
     "TerminalManager/TerminalHandler.cpp": [
       {
         "id": "c8f818ee-363e-4878-990a-6951879d2115",
         "line": 6,
-        "version": 6945,
+        "version": 7021,
         "index": 267
       },
       {
         "id": "bfbfb70f-8d41-458e-8d00-d559d09db4e8",
         "line": 6,
-        "version": 6945,
+        "version": 7021,
         "index": 267
       },
       {
         "id": "1f8895ac-5a4c-458e-bc7e-252ca28d9afc",
         "line": 15,
-        "version": 6945,
+        "version": 7021,
         "index": 500
       }
     ],

@@ -9,7 +9,13 @@ OBJECTS := $(SOURCES:.cpp=.o)
 all: $(PROJECT_NAME)_Executable
 
 $(PROJECT_NAME)_Executable: $(OBJECTS)
-	$(CXX) $^ -o $@
+	@if [ -n "$$(git status --porcelain)" ]; then \
+		echo "Building: $(PROJECT_NAME)"; \
+		$(CXX) $^ -o $@; \
+	else \
+		echo "Building: $(PROJECT_NAME)"; \
+		echo "| Nothing to be done for 'all'."; \
+	fi
 
 %.o: %.cpp
 	$(CXX) -c $< -o $@

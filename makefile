@@ -15,6 +15,7 @@ main: $(OBJECTS)
 	$(CXX) $^ -o $@ -std=c++17 -lstdc++fs
 
 %.o: %.cpp $(HEADERS)
+	@echo "Compiling $<..."  # Debug message here
 	$(CXX) -c $< -o $@
 
 clean:
