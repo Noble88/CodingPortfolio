@@ -7,7 +7,7 @@ GenQueue::GenQueue() {
   numElements = 0;
   myQueue = new char[mSize];
 }
-//d
+
 GenQueue::GenQueue(int maxSize) {
   mSize = maxSize;
   front = 0;

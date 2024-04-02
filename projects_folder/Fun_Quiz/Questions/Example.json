@@ -1,0 +1,17 @@
+{
+  "questions": [
+    {
+      "question": "Example Multiple Choice",
+      "type": "multiple choice",
+      "options": ["Choice 1", "Choice 2", "Choice 3", "Choice 4"],
+      "correct_answer": "1"
+      "answer_explination": "EXample Explination"
+    },
+    {
+      "question": "Example Set Answer",
+      "type": "set answer",
+      "correct_answer": "1"
+      "answer_explination": "Example Explination"
+    }
+  ]
+}

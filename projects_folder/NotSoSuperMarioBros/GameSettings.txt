@@ -1,0 +1,8 @@
+Number of Level: 4
+Dimension: 3
+Number of Inital Lives: 3
+Precent of Coins(c): 25
+Precent of Nothing(x): 25
+Precent of Goombas(g): 12
+Precent of Koopas(k): 13
+Precent of Mushrooms(m): 25

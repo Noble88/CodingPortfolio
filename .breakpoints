@@ -4,7 +4,7 @@
       {
         "id": "e63d566b-431f-47b5-966b-49d380b46173",
         "line": 38,
-        "version": 7060,
+        "version": 7422,
         "index": 2209
       }
     ],
@@ -20,28 +20,44 @@
       {
         "id": "c8f818ee-363e-4878-990a-6951879d2115",
         "line": 6,
-        "version": 7021,
+        "version": 7832,
         "index": 267
       },
       {
         "id": "bfbfb70f-8d41-458e-8d00-d559d09db4e8",
         "line": 6,
-        "version": 7021,
+        "version": 7832,
         "index": 267
       },
       {
         "id": "1f8895ac-5a4c-458e-bc7e-252ca28d9afc",
         "line": 15,
-        "version": 7021,
+        "version": 7832,
         "index": 500
+      }
+    ],
+    "projects_folder/Fun_Quiz/TerminalInput/Stack": [
+      {
+        "id": "a311c55e-d61b-4017-9293-99ceadb594ed",
+        "line": 1,
+        "version": 0,
+        "index": 0
       }
     ],
     "projects_folder/GenStack/makefile": [
       {
         "id": "40fc7a0f-c171-4845-8090-9941f095bd38",
         "line": 1,
-        "version": 2,
+        "version": 3,
         "index": 0
+      }
+    ],
+    "projects_folder/NotSoSuperMarioBros/GameSettings.txt": [
+      {
+        "id": "8cdccd60-ee6d-44de-8879-92d001c7a068",
+        "line": 2,
+        "version": 245,
+        "index": 19
       }
     ],
     "projects_folder/Project1/metadata.txt": [

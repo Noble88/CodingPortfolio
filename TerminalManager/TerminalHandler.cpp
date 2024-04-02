@@ -358,7 +358,7 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
     // Display project menu options
     cout << "1) Run Project" << endl;
     cout << "2) See Description" << endl;
-    cout << "3) Export Project to Zip" << endl;
+    cout << "3) Export Project to Zip (NOT AVALIBLE)" << endl;
     cout << "4) Back" << endl;
 
     // Get user input
@@ -376,7 +376,7 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
       case 2:
         cout << projectTable[(userInput-1)][4] << endl; break;
       case 3: 
-        ZipProject("projects_folder/"+projectTable[(userInput-1)][0]); 
+        //INSERT ZIP IMPLEMENTATION
         isInSubMenu = false; break;
       case 4: isInSubMenu = false; break;
       default:
@@ -384,7 +384,6 @@ void TerminalHandler::ProjectSelectionResponse(int userInput) {
     }
   }
 }
-
 
 //Misc
 void TerminalHandler::BuildExecutables(){
@@ -489,31 +488,6 @@ void TerminalHandler::UploadToGitHub(){
       clear_file.close();
     }
   }
-}
-string ExtractDirectoryName(const std::string& filePath) {
-  std::string zipFilePath = "../Exports/Project.zip"; // Customize as needed
-
-  mz_zip_archive zip_archive;
-  memset(&zip_archive, 0, sizeof(zip_archive));
-
-  mz_bool status = mz_zip_writer_init_file(&zip_archive, zipFilePath.c_str(), 0);
-  if (!status) {
-      std::cerr << "Failed to init zip writer." << std::endl;
-      return;
-  }
-
-  // Iterate through directory and add files to the zip
-  for (const auto& entry : fs::recursive_directory_iterator(inputDirPath)) {
-      if (fs::is_directory(entry.path())) continue; // Skip directories
-
-      mz_zip_writer_add_file(&zip_archive, entry.path().filename().c_str(), entry.path().c_str(), "", 0, MZ_BEST_COMPRESSION);
-  }
-
-  mz_zip_writer_finalize_archive(&zip_archive);
-  mz_zip_writer_end(&zip_archive);
-
-  std::cout << "Directory zipped successfully: " << zipFilePath << std::endl;
-
 }
 
 //Input To Action Methods

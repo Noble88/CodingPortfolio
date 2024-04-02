@@ -1,0 +1,79 @@
+
+
+ALGORITHMS
+  IF HAVE 2 DIFFERENT ALGORITHMS CAN TEST VIA...
+    Empirical analysis: Real time executions & RUN SAME INPUT VARS (hardware, software, ever single var)
+    Asymptotic analysis: MATH MATICAL -> CAN PREDICT EFFICENTCY VIA EQUATION
+
+O NOTATION
+  Big O: worst case senario
+  Little O: Grows slower to f(n) O(g(n) where g(n) is another algorithim
+  f(n) -> the equation
+  Little Omega: Grows faster to f(n) O(g(n) where g(n) is another algorithim
+  Big Omega: Best case (lower bound)
+
+  Time Complexity
+  Note: N = amount of data
+  -O( 1 ) [constant] = single execution | EX: declartion or inilization of primiative
+  -O( log N ) → as grows slight decrease | EX: Binary Searchz
+  -O( n ) [linear]   = time linked to amount of data | EX: a single loop or Linear Search
+  -O( n*Log(n) ) = N doubles then time slightly more than double | EX: merge sort or Quick Sort
+  -O( n^2 ) = Qaudruples runtime | EX: double nested loop & Bubble sort|
+
+
+Array
+  Pro -> 
+    - Access Data O(1)
+    - GO FOR READING
+  Con -> O(n) [linear]
+    - Insertion O(n)
+    - Delete O(n)
+    - Search O(n)
+    
+  NOTE: Memory is occupied on creation 
+
+Stack
+  Pro O(1)
+    - [Push, Pop, Peak] / [Insert, Remove, Read]
+  Con
+    - ALLOW CCATION OF MEMEOY IS O(n)
+  NOTE: FIRST IN LAST OUT [stack of papers]
+ARRAY BASED: SIZE LIMITED 
+LIST BASED: SIZE DYNAMIC
+
+APPLICATION UNDO
+
+Queues (non circular) ARRAY BASED
+ - FIRST IN FIRST OUT
+ - Enqueue  [add] O(1)         [if not space -> O(n) due to reformatting array]
+ - Dequeue [remove] -> array based -> O(n)
+ - Peak (access front) = O(1)
+
+Queues Circular (list based)
+  - Enqeue & Peak = O(1)
+  - Dequeue -> O(1)
+  - Dynamic in size 
+
+Double ended Queue
+  - Can get both front & Back
+  - Insert front/back = O(1)
+  - Delete front/back = O(1)
+  - Peak front/back = O(1)
+
+Priority queue
+  -MinQueue: minimum element at the top of the queue -> smallest priority = dequeued first
+  -MaxQueue: maximum element at the top of the queue -> largest priority = dequeued first
+  
+  -Insertion O(log n)
+  -Deletion O(log n) 
+  -Peek O(1)
+  
+  -Application: TODO LIST
+
+
+ Linked list
+  single takes up 8 bytes on 64 bit
+    double is 16 bites
+  Dyanmic
+  READING DATA IS O(n)
+

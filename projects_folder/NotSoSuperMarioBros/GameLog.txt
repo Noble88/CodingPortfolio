@@ -1,0 +1,42 @@
+Level 1/4 | Lives: 1 | coins: 1 | killStreak: 0 | powerLevel: 0 | 
+recentCollision: c | isGameOver: 0 | Player Location: [3,1] | 
+m w x 
+g b x 
+H c c 
+
+Level 1/4 | Lives: 1 | coins: 2 | killStreak: 0 | powerLevel: 0 | 
+recentCollision: c | isGameOver: 0 | Player Location: [3,2] | 
+m w x 
+g b x 
+x H c 
+
+Level 1/4 | Lives: 1 | coins: 2 | killStreak: 0 | powerLevel: 0 | 
+recentCollision: x | isGameOver: 0 | Player Location: [3,1] | 
+m w x 
+g b x 
+H x c 
+
+Level 1/4 | Lives: 1 | coins: 2 | killStreak: 0 | powerLevel: 0 | 
+recentCollision: x | isGameOver: 0 | Player Location: [3,2] | 
+m w x 
+g b x 
+x H c 
+
+Level 1/4 | Lives: 1 | coins: 2 | killStreak: 0 | powerLevel: 0 | 
+recentCollision: x | isGameOver: 0 | Player Location: [3,1] | 
+m w x 
+g b x 
+H x c 
+
+Level 1/4 | Lives: 1 | coins: 2 | killStreak: 1 | powerLevel: 0 | 
+recentCollision: g | isGameOver: 0 | Player Location: [2,1] | 
+m w x 
+H b x 
+x x c 
+
+Level 1/4 | Lives: -1 | coins: 2 | killStreak: 0 | powerLevel: 0 | 
+recentCollision: b | isGameOver: 1 | Player Location: [2,1] | 
+m w x 
+H b x 
+x x c 
+
